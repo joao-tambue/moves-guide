@@ -11,7 +11,7 @@
 
 > Descrição do Projeto
 
-### 🏠 [Homepage](Crie uma aplicação chamada “MovieFinder”, que consome dados de uma API pública de filmes e exibe uma lista de títulos, com opção de busca e visualização de detalhes.)
+### 🏠 [Homepage](Crie uma aplicação chamada “Moves Guide”, que consome dados de uma API pública de filmes e exibe uma lista de títulos, com opção de busca e visualização de detalhes.)
 
 ### ✨ [Demo](Layout adaptável para mobile, tablet e desktop)
 
@@ -25,11 +25,10 @@ npm install
 
 👤 **joão tambue**
 
-* Github: [@joao-tambue](https://github.com/joao-tambue)
-
 ## Show your support
 
 Give a ⭐️ if this project helped you!
 
-***
+---
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
