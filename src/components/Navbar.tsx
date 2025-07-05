@@ -1,6 +1,8 @@
 import logo from '../assets/logotipo.svg'
 
+
 const Navbar = () => {
+
     return (
         <nav className='bg-[#171717]'>
             <div className='flex justify-between p-4 w-[1180px] mx-auto'>
@@ -11,7 +13,6 @@ const Navbar = () => {
                         <li><a href="">People</a></li>
                         <li><a href="">Profile</a></li>
                     </ul>
-                    <input type="search" name="" id="" placeholder='Search a title' className='w-[300px] text-[10px] px-4 py-2 rounded-md' />
                 </div>
             </div>
         </nav>

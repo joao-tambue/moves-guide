@@ -1,27 +1,108 @@
-import {useState} from 'react'
-import Navbar from '../components/Navbar'
-import bgImage from '../assets/image/Rectangle 9.png'
-import coverImage from '../assets/image/image 19.png'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import eye from '../assets/icon/eye.svg'
 import iconcoracao from '../assets/icon/iconcoracao.svg'
+import bgImage from '../assets/image/Rectangle 9.png'
+import axios from 'axios'
+import Navbar from '../components/Navbar';
 
+interface Movie {
+  imdbID: string;
+  Title: string;
+  Year: string;
+  Poster: string;
+}
+
+const genres = [
+  'Ação', 'Aventura', 'Animação', 'Comédia', 'Crime', 'Documentário',
+  'Drama', 'Família', 'Fantasia', 'História', 'Terror', 'Música',
+  'Mistério', 'Romance', 'Ficção científica', 'Cinema TV', 'Thriller', 'Guerra', 'Faroeste'
+];
+
+const Filter = ({ onSelectGenre }: { onSelectGenre: (genre: string) => void }) => {
+  return (
+    <div className='flex flex-col items-center gap-3 justify-center py-3 font-sans font-semibold'>
+      <div className='flex items-center gap-3 justify-center font-sans flex-wrap'>
+        {genres.map(genre => (
+          <button
+            key={genre}
+            className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'
+            onClick={() => onSelectGenre(genre)}
+          >
+            {genre}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 export default function Home() {
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(12);
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [loading, setLoading] = useState(false); 
+  // const [searchTerm, setSearchTerm] = useState('2020');
+  const [searchTerm, setSearchTerm] = useState(''); 
+  const [mediaType, setMediaType] = useState<'movie' | 'series' | ''>(''); 
+  const defaultSearchTerms = ['fast', 'marvel', 'new'];
+  const activeSearchTerm = searchTerm.trim() !== '' ? searchTerm : defaultSearchTerms[Math.floor(Math.random() * defaultSearchTerms.length)];
 
-  function MovieCard() {
+  // 'avengers', 'dune', 'batman', 'stranger', 'spider', 'john wick', 'oppenheimer', 'fast', 'guardians',
+
+  const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
+  // const API_KEY = 'a041c6a1';
+
+  useEffect(() => {
+  async function fetchMovies() {
+    setLoading(true);
+    try {
+      let url = `https://api.themoviedb.org/3/search/${mediaType || 'movie'}?api_key=${API_KEY}&query=${encodeURIComponent(activeSearchTerm)}&page=${page}&language=pt-PT`;
+      // Se não houver termo de busca, pode usar discover para popular
+      if (!searchTerm.trim()) {
+        url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
+      }
+      const res = await axios.get(url);
+      if (res.data && res.data.results) {
+        setMovies(
+          res.data.results.map((item: any) => ({
+            imdbID: item.id, // TMDb usa 'id'
+            Title: item.title || item.name, // 'title' para filmes, 'name' para séries
+            Year: (item.release_date || item.first_air_date || '').slice(0, 4),
+            Poster: item.poster_path
+              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+              : 'https://via.placeholder.com/176x260',
+          }))
+        );
+        setTotalPages(res.data.total_pages);
+      } else {
+        setMovies([]);
+      }
+    } catch (err) {
+      setMovies([]);
+    }
+    setLoading(false);
+  }
+  fetchMovies();
+}, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
+
+  function MovieCard({ movie }: { movie: Movie }) {
     const [menuOpen, setMenuOpen] = useState(false)
     const [hovered, setHovered] = useState(false)
     const [rating, setRating] = useState(0)
+    const navigate = useNavigate();
 
     return (
       <div
-        className="relative mt-4 w-[176px] rounded-lg"
+        className="relative mt-4 w-[176px] rounded-lg cursor-pointer"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => { setHovered(false); setMenuOpen(false) }}
+        onClick={() => navigate(`/movie/${movie.imdbID}`)}
       >
         <img
-          src={coverImage}
-          alt="image"
+          src={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/176x260'}
+          alt={movie.Title}
           className="w-full h-72 object-cover hover:border-2 hover:rounded border-white border-2 rounded hover:border-[#00DF5E] transition-all"
         />
         {hovered && (
@@ -40,8 +121,8 @@ export default function Home() {
             </button>
             <button className="text-left px-2 py-1 flex items-center gap-2">
               <img src={eye} alt="icon" />
-                Watched
-              </button>
+              Watched
+            </button>
             <div className="flex items-center gap-1 justify-center">
               {[1, 2, 3, 4, 5].map(star => (
                 <span
@@ -55,11 +136,11 @@ export default function Home() {
                 </span>
               ))}
             </div>
-             </div>
+          </div>
         )}
         <div className="py-4 text-white">
-          <h1 className="font-semibold text-[16px]">Clifford</h1>
-          <p className="text-[14px]">12 NOV 2021</p>
+          <h1 className="font-semibold text-[16px] truncate">{movie.Title}</h1>
+          <p className="text-[14px]">{movie.Year}</p>
         </div>
       </div>
     )
@@ -74,82 +155,49 @@ export default function Home() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
       }}>
-        <div className='py-10'>
+        <div className='py-10 flex flex-col items-center px-[200px]'>
+          <input
+            type="search"
+            placeholder="Search a title"
+            className="w-[300px] text-[10px] px-4 py-2 rounded-md"
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            disabled // Desabilita o input já que não há busca manual
+          />
           <h1 className='text-[46px] text-white font-sans font-semibold text-center'>
             Track films you've watched. <br /> Discover millions of movies. <br />
             Explore now.
           </h1>
           <p className='text-center text-white'>FILTER BY:</p>
-
-          <div className='flex flex-col items-center gap-3 justify-center py-3 font-sans font-semibold'>
-            <div className='flex items-center gap-3 justify-center font-sans'>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Açao
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Aventura
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Animação
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Comédia
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Crime
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Documentário
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Drama
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Família
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Fantasia
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                História
-              </button>
-            </div>
-            <div className='flex items-center gap-3 justify-center font-sans'>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Terror
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Música
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Mistério
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Romance
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Ficção científica
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Cinema TV
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Thriller
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Guerra
-              </button>
-              <button className='px-3 py-2 bg-white rounded hover:bg-[#00DF5E]'>
-                Faroeste
-              </button>
-            </div>
-          </div>
+          <Filter onSelectGenre={setSelectedGenre} />
         </div>
       </div>
 
       <div className='w-[1150px] mx-auto mt-10'>
-        <h1 className='text-[25px] font-sans font-semibold text-[#00DF5E]'>Popular Films This Weeks</h1>
-        <MovieCard />
+        <div className='flex justify-between items-center'>
+        <h1 className='text-[25px] font-sans font-semibold text-[#00DF5E]'>Popular Films This Week</h1>
+        <div className="flex gap-4 my-4 justify-center">
+          <button onClick={() => setMediaType('movie')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Filmes</button>
+          <button onClick={() => setMediaType('series')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Séries</button>
+        </div>
+
+        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <span className="text-white text-xl">Carregando...</span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-5 gap-6 justify-between">
+            {movies.map(movie => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))}
+          </div>
+        )}
+        <div className="flex justify-center items-center mt-8 gap-4 text-white">
+          <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="text-2xl">⬅️</button>
+          <span className="text-xl">Página {page} de {totalPages}</span>
+          <button onClick={() => setPage(p => Math.min(p + 1, totalPages))} className="text-2xl">➡️</button>
+        </div>
       </div>
     </div>
   )
