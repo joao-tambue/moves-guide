@@ -11,6 +11,7 @@ interface Movie {
   Title: string;
   Year: string;
   Poster: string;
+  rating?: number;
 }
 
 const genres = [
@@ -43,55 +44,71 @@ export default function Home() {
   const [totalPages, setTotalPages] = useState(12);
   const [selectedGenre, setSelectedGenre] = useState('');
   const [loading, setLoading] = useState(false); 
-  // const [searchTerm, setSearchTerm] = useState('2020');
   const [searchTerm, setSearchTerm] = useState(''); 
   const [mediaType, setMediaType] = useState<'movie' | 'series' | ''>(''); 
   const defaultSearchTerms = ['fast', 'marvel', 'new'];
   const activeSearchTerm = searchTerm.trim() !== '' ? searchTerm : defaultSearchTerms[Math.floor(Math.random() * defaultSearchTerms.length)];
-
-  // 'avengers', 'dune', 'batman', 'stranger', 'spider', 'john wick', 'oppenheimer', 'fast', 'guardians',
-
   const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
-  // const API_KEY = 'a041c6a1';
 
   useEffect(() => {
-  async function fetchMovies() {
-    setLoading(true);
-    try {
-      let url = `https://api.themoviedb.org/3/search/${mediaType || 'movie'}?api_key=${API_KEY}&query=${encodeURIComponent(activeSearchTerm)}&page=${page}&language=pt-PT`;
-      // Se não houver termo de busca, pode usar discover para popular
-      if (!searchTerm.trim()) {
-        url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
-      }
-      const res = await axios.get(url);
-      if (res.data && res.data.results) {
-        setMovies(
-          res.data.results.map((item: any) => ({
-            imdbID: item.id, // TMDb usa 'id'
-            Title: item.title || item.name, // 'title' para filmes, 'name' para séries
-            Year: (item.release_date || item.first_air_date || '').slice(0, 4),
-            Poster: item.poster_path
-              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-              : 'https://via.placeholder.com/176x260',
-          }))
-        );
-        setTotalPages(res.data.total_pages);
-      } else {
+    async function fetchMovies() {
+      setLoading(true);
+      try {
+        let url = `https://api.themoviedb.org/3/search/${mediaType || 'movie'}?api_key=${API_KEY}&query=${encodeURIComponent(activeSearchTerm)}&page=${page}&language=pt-PT`;
+        if (!searchTerm.trim()) {
+          url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
+        }
+        const res = await axios.get(url);
+        if (res.data && res.data.results) {
+          setMovies(
+            res.data.results.map((item: any) => ({
+              imdbID: item.id,
+              Title: item.title || item.name,
+              Year: (item.release_date || item.first_air_date || '').slice(0, 4),
+              Poster: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/176x260',
+            }))
+          );
+          setTotalPages(res.data.total_pages);
+        } else {
+          setMovies([]);
+        }
+      } catch (err) {
         setMovies([]);
       }
-    } catch (err) {
-      setMovies([]);
+      setLoading(false);
     }
-    setLoading(false);
+    fetchMovies();
+  }, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
+
+  const saveToLocalStorage = (key: string, movie: Movie & { rating: number }) => {
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    const updated = existing.filter((m: any) => m.imdbID !== movie.imdbID);
+    updated.push(movie);
+    localStorage.setItem(key, JSON.stringify(updated));
   }
-  fetchMovies();
-}, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
 
   function MovieCard({ movie }: { movie: Movie }) {
-    const [menuOpen, setMenuOpen] = useState(false)
-    const [hovered, setHovered] = useState(false)
-    const [rating, setRating] = useState(0)
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [hovered, setHovered] = useState(false);
+    const [rating, setRating] = useState(0);
     const navigate = useNavigate();
+
+    const handleFavorite = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      saveToLocalStorage('favorites', { ...movie, rating });
+    }
+
+    const handleWatched = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      saveToLocalStorage('watched', { ...movie, rating });
+    }
+
+    const handleRating = (value: number, e: React.MouseEvent) => {
+      e.stopPropagation();
+      setRating(value);
+      saveToLocalStorage('favorites', { ...movie, rating: value });
+      saveToLocalStorage('watched', { ...movie, rating: value });
+    }
 
     return (
       <div
@@ -115,11 +132,11 @@ export default function Home() {
         )}
         {menuOpen && (
           <div className="absolute top-10 right-2 bg-[#000000] text-[12px] text-white rounded shadow-lg z-10 p-3 flex flex-col gap-2">
-            <button className="text-left px-2 py-1 flex items-center gap-2">
+            <button className="text-left px-2 py-1 flex items-center gap-2" onClick={handleFavorite}>
               <img src={iconcoracao} alt="icon" />
               Favorito
             </button>
-            <button className="text-left px-2 py-1 flex items-center gap-2">
+            <button className="text-left px-2 py-1 flex items-center gap-2" onClick={handleWatched}>
               <img src={eye} alt="icon" />
               Watched
             </button>
@@ -128,7 +145,7 @@ export default function Home() {
                 <span
                   key={star}
                   className={`cursor-pointer text-[16px] ${star <= rating ? 'text-yellow-400' : 'text-gray-400'}`}
-                  onClick={() => setRating(star)}
+                  onClick={e => handleRating(star, e)}
                   role="button"
                   aria-label={`Marcar ${star} estrela${star > 1 ? 's' : ''}`}
                 >
@@ -162,7 +179,7 @@ export default function Home() {
             className="w-[300px] text-[10px] px-4 py-2 rounded-md"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            disabled // Desabilita o input já que não há busca manual
+            disabled
           />
           <h1 className='text-[46px] text-white font-sans font-semibold text-center'>
             Track films you've watched. <br /> Discover millions of movies. <br />
@@ -175,12 +192,11 @@ export default function Home() {
 
       <div className='w-[1150px] mx-auto mt-10'>
         <div className='flex justify-between items-center'>
-        <h1 className='text-[25px] font-sans font-semibold text-[#00DF5E]'>Popular Films This Week</h1>
-        <div className="flex gap-4 my-4 justify-center">
-          <button onClick={() => setMediaType('movie')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Filmes</button>
-          <button onClick={() => setMediaType('series')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Séries</button>
-        </div>
-
+          <h1 className='text-[25px] font-sans font-semibold text-[#00DF5E]'>Popular Films This Week</h1>
+          <div className="flex gap-4 my-4 justify-center">
+            <button onClick={() => setMediaType('movie')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Filmes</button>
+            <button onClick={() => setMediaType('series')} className="bg-white px-4 py-2 rounded hover:bg-[#00DF5E]">Séries</button>
+          </div>
         </div>
         {loading ? (
           <div className="flex justify-center items-center h-40">
@@ -193,7 +209,7 @@ export default function Home() {
             ))}
           </div>
         )}
-        <div className="flex justify-center items-center mt-8 gap-4 text-white">
+        <div className="flex justify-center items-center mt-8 gap-4 text-white py-14">
           <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="text-2xl">⬅️</button>
           <span className="text-xl">Página {page} de {totalPages}</span>
           <button onClick={() => setPage(p => Math.min(p + 1, totalPages))} className="text-2xl">➡️</button>

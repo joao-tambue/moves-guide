@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
@@ -71,86 +72,124 @@ export default function MovieDetails() {
     fetchAll();
   }, [id]);
 
-  if (loading) return <div className="text-white text-xl p-10">Carregando...</div>;
-  if (!movie) return <div className="text-red-500 p-10">Filme não encontrado</div>;
+  if (loading) return <div className="text-white text-xl p-10 text-center mt-48">Carregando...</div>;
+  if (!movie) return <div className="text-red-500 p-10 text-center mt-48">Filme não encontrado</div>;
 
   return (
-    <div className="text-white p-10 flex flex-col gap-10 max-w-6xl mx-auto">
-      {/* Detalhes */}
-      <div className="flex gap-10">
-        <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.title}
-          className="w-[300px] rounded-lg shadow-md"
-        />
-        <div>
-          <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
-          <p><strong>Gênero:</strong> {movie.genres.map(g => g.name).join(', ')}</p>
-          <p><strong>Data de Lançamento:</strong> {movie.release_date}</p>
-          <p><strong>Nota TMDb:</strong> {movie.vote_average}</p>
-          <p className="mt-4"><strong>Sinopse:</strong> {movie.overview}</p>
-        </div>
-      </div>
+    <>
+        <Navbar />
+        <div
+            style={{
+                position: 'relative',
+                backgroundImage: `url(https://image.tmdb.org/t/p/original${movie.poster_path})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '350px',
+                width: '100%',
+                marginBottom: '2rem',
+            }}
+        >
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'rgba(0,0,0,0.75)',
+                    zIndex: 1,
+                }}
+            />
+            <div style={{ position: 'relative', zIndex: 2, height: '100%' }}>
+                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto">
+                    <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-[300px] rounded-lg shadow-md"
+                    />
+                    <div>
+                        <div>
+                            <h1 className="text-4xl mb-4 font-sans font-semibold">{movie.title}</h1>
+                            <p><strong>Gênero:</strong> {movie.genres.map(g => g.name).join(', ')}</p>
+                            <p><strong>Data de Lançamento:</strong> {movie.release_date}</p>
+                            <p><strong>Nota TMDb:</strong> {movie.vote_average}</p>
+                            <p className="mt-4"><strong>Sinopse:</strong> {movie.overview}</p>
+                        </div>
 
-      {/* Elenco */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Elenco Principal</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {cast.map(actor => (
-            <div key={actor.id} className="bg-[#111] rounded-lg p-2 text-center">
-              <img
-                src={
-                  actor.profile_path
-                    ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                    : 'https://via.placeholder.com/185x278?text=Sem+foto'
-                }
-                alt={actor.name}
-                className="w-full h-[278px] object-cover rounded mb-2"
-              />
-              <p className="text-sm font-bold">{actor.name}</p>
-              <p className="text-xs text-gray-300">como {actor.character}</p>
+                        <div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-          ))}
         </div>
-      </div>
+        <div className="text-white p-10 flex flex-col gap-10 max-w-6xl mx-auto">
+        {/* Detalhes */}
+        <div >
+            
+        </div>
 
-      {/* Trailer */}
-      {trailer && (
+        {/* Elenco */}
         <div>
-          <h2 className="text-2xl font-semibold mb-4">Trailer Oficial</h2>
-          <div className="aspect-video w-full max-w-3xl mx-auto">
-            <iframe
-              className="rounded-lg w-full h-full"
-              src={`https://www.youtube.com/embed/${trailer.key}`}
-              title={trailer.name}
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      )}
-
-      {/* Recomendados */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Filmes Recomendados</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {recommendations.map(rec => (
-            <div key={rec.id} className="bg-[#111] rounded-lg overflow-hidden">
-                <Link to={`/details/${rec.id}`}>
+            <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Elenco Principal</h2>
+            <div className="grid grid-cols-5 gap-4">
+            {cast.map(actor => (
+                <Link to={`/actor/${actor.id}`} key={actor.id} className="bg-[#FFFFFF] rounded-lg p-2">
                 <img
                     src={
-                    rec.poster_path
-                        ? `https://image.tmdb.org/t/p/w300${rec.poster_path}`
-                        : 'https://via.placeholder.com/300x450?text=Sem+imagem'
+                    actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                        : 'https://via.placeholder.com/185x278?text=Sem+foto'
                     }
-                    alt={rec.title}
-                    className="w-full h-[300px] object-cover"
+                    alt={actor.name}
+                    className="w-full h-[278px] object-cover rounded mb-2"
                 />
-                <div className="p-2 text-sm font-medium text-center">{rec.title}</div>
+                <p className="text-sm font-bold text-black">{actor.name}</p>
+                <p className="text-xs text-black">como {actor.character}</p>
                 </Link>
-            </div>
             ))}
+            </div>
         </div>
-      </div>
-    </div>
+
+        {/* Trailer */}
+        {trailer && (
+            <div>
+            <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Trailer Oficial</h2>
+            <div className="aspect-video w-full max-w-3xl mx-auto">
+                <iframe
+                className="rounded-lg w-full h-full"
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                title={trailer.name}
+                allowFullScreen
+                ></iframe>
+            </div>
+            </div>
+        )}
+
+        {/* Recomendados */}
+        <div>
+            <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Filmes Recomendados</h2>
+            <div className="grid grid-cols-5 gap-4">
+            {recommendations.map(rec => (
+                <div key={rec.id} className="overflow-hidden">
+                    <Link to={`/details/${rec.id}`}>
+                    <img
+                        src={
+                        rec.poster_path
+                            ? `https://image.tmdb.org/t/p/w300${rec.poster_path}`
+                            : 'https://via.placeholder.com/300x450?text=Sem+imagem'
+                        }
+                        alt={rec.title}
+                        className="w-full h-[300px] object-cover"
+                    />
+                    <div className="p-2 text-sm font-medium text-center text-[#FFFF]">{rec.title}</div>
+                    </Link>
+                </div>
+                ))}
+            </div>
+        </div>
+        </div>
+    </>
   );
 }
