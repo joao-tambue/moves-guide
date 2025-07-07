@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="public/vite.svg" alt="MovieFinder Logo" width="120" />
+  <img src="./public/image.png" alt="MovieFinder Logo" />
 </p>
 
 # The-Movie-Guide 🎬
@@ -28,6 +28,7 @@ O _MovieFinder_ é uma aplicação web desenvolvida em React + Vite, que permite
 
 - _Busca de Filmes:_ Campo de busca por título, com resultados em tempo real.
 - _Listagem de Resultados:_ Exibe pôster, nome, ano e nota dos filmes.
+- _Listagem atores:_ Exibe imagem, nome, biografia e algumas informções pessoais dele e também exibi alguns filmes em que ele participou.
 - _Página de Detalhes:_ Ao clicar em um filme, mostra sinopse, gêneros, data de lançamento, nota e pôster ampliado.
 - _Responsividade:_ Layout adaptável para mobile, tablet e desktop.
 - _Feedback Visual:_ Loader animado durante requisições e mensagens de erro amigáveis (ex: filme não encontrado).
@@ -49,24 +50,13 @@ O _MovieFinder_ é uma aplicação web desenvolvida em React + Vite, que permite
 [![TMDB API](https://img.shields.io/badge/TMDB_API-%2300d2ff.svg?logo=themoviedatabase&logoColor=white)](https://www.themoviedb.org/documentation/api)
 [![Auth0](https://img.shields.io/badge/Auth0-%23EB5424.svg?logo=auth0&logoColor=white)](https://auth0.com/docs)
 
-- **React** (com Vite)
-- **TypeScript**
-- **Tailwind CSS** (estilização e responsividade)
-- **Axios** (requisições HTTP)
-- **React Router DOM** (navegação entre páginas)
-- **Context API** (gerenciamento de autenticação)
-- **TMDB API** ([documentação](https://www.themoviedb.org/documentation/api))
-- **Auth0** ([documentação](https://auth0.com/docs))
-
----
-
 ---
 
 ## Links Úteis
 
 - [TMDB API](https://www.themoviedb.org/documentation/api)
-- [Auth0 - API de Autenticação](https://auth0.com)
-- [Auth0 Docs](https://auth0.com/docs)
+- [Auth-api docs](http://localhost:5000/api-docs/#/)
+- [Auth-api](https://auth-api-jwt.onrender.com)
 
 ---
 
@@ -104,14 +94,6 @@ services/ # Serviços de API (ex: api.ts)
 types/ # Tipagens TypeScript
 index.css # Estilos globais
 main.tsx # Ponto de entrada da aplicação
-
----
-
-## Demonstração
-
-<p align="center">
-  <img src="public/vite.svg" alt="MovieFinder Demo" width="120" />
-</p>
 
 ---
 
