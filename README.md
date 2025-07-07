@@ -4,8 +4,12 @@
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="#" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-joao MIT-yellow.svg" />
+    <img alt="License: joao tambue" src="https://img.shields.io/badge/License-joao tambue-yellow.svg" />
   </a>
+</p>
+
+<p align="center">
+  <img src="public/vite.svg" alt="MovieFinder Logo" width="120" />
 </p>
 
 # The-Movie-Guide 🎬
@@ -35,13 +39,34 @@ O _MovieFinder_ é uma aplicação web desenvolvida em React + Vite, que permite
 
 ## Tecnologias Utilizadas
 
-- _React_ (com Vite)
-- _TypeScript_
-- _Tailwind CSS_ (estilização e responsividade)
-- _Axios_ (requisições HTTP)
-- _React Router DOM_ (navegação entre páginas)
-- _Context API_ (gerenciamento de autenticação)
-- _TMDB API_ (fonte de dados de filmes)
+[![React.js](https://img.shields.io/badge/React.js-%2361DAFB.svg?logo=react&logoColor=black)](#)
+[![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC.svg?logo=typescript&logoColor=white)](#)
+[![Vite](https://img.shields.io/badge/Vite-%23646CFF.svg?logo=vite&logoColor=white)](#)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-%2338B2AC.svg?logo=tailwindcss&logoColor=white)](#)
+[![Axios](https://img.shields.io/badge/Axios-%235A29E4.svg?logo=axios&logoColor=white)](#)
+[![React Router](https://img.shields.io/badge/React_Router-%23CA4245.svg?logo=react-router&logoColor=white)](#)
+[![Context API](https://img.shields.io/badge/Context_API-%2361DAFB.svg?logo=react&logoColor=white)](#)
+[![TMDB API](https://img.shields.io/badge/TMDB_API-%2300d2ff.svg?logo=themoviedatabase&logoColor=white)](https://www.themoviedb.org/documentation/api)
+[![Auth0](https://img.shields.io/badge/Auth0-%23EB5424.svg?logo=auth0&logoColor=white)](https://auth0.com/docs)
+
+- **React** (com Vite)
+- **TypeScript**
+- **Tailwind CSS** (estilização e responsividade)
+- **Axios** (requisições HTTP)
+- **React Router DOM** (navegação entre páginas)
+- **Context API** (gerenciamento de autenticação)
+- **TMDB API** ([documentação](https://www.themoviedb.org/documentation/api))
+- **Auth0** ([documentação](https://auth0.com/docs))
+
+---
+
+---
+
+## Links Úteis
+
+- [TMDB API](https://www.themoviedb.org/documentation/api)
+- [Auth0 - API de Autenticação](https://auth0.com)
+- [Auth0 Docs](https://auth0.com/docs)
 
 ---
 
