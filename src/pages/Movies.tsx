@@ -5,6 +5,8 @@ import iconcoracao from '../assets/icon/iconcoracao.svg'
 import bgImage from '../assets/image/Rectangle 9.png'
 import axios from 'axios'
 import Navbar from '../components/Navbar';
+import { Search } from 'lucide-react';
+import Loading from '../components/Loading';
 
 interface Movie {
   imdbID: string;
@@ -61,9 +63,16 @@ export default function Home() {
         const res = await axios.get(url);
         if (res.data && res.data.results) {
           setMovies(
-            res.data.results.map((item: any) => ({
+            res.data.results.map((item: {
+              id: string;
+              title?: string;
+              name?: string;
+              release_date?: string;
+              first_air_date?: string;
+              poster_path?: string;
+            }) => ({
               imdbID: item.id,
-              Title: item.title || item.name,
+              Title: item.title || item.name || '',
               Year: (item.release_date || item.first_air_date || '').slice(0, 4),
               Poster: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/176x260',
             }))
@@ -72,7 +81,7 @@ export default function Home() {
         } else {
           setMovies([]);
         }
-      } catch (err) {
+      } catch {
         setMovies([]);
       }
       setLoading(false);
@@ -81,8 +90,8 @@ export default function Home() {
   }, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
 
   const saveToLocalStorage = (key: string, movie: Movie & { rating: number }) => {
-    const existing = JSON.parse(localStorage.getItem(key) || '[]');
-    const updated = existing.filter((m: any) => m.imdbID !== movie.imdbID);
+    const existing: (Movie & { rating: number })[] = JSON.parse(localStorage.getItem(key) || '[]');
+    const updated = existing.filter((m) => m.imdbID !== movie.imdbID);
     updated.push(movie);
     localStorage.setItem(key, JSON.stringify(updated));
   }
@@ -112,7 +121,7 @@ export default function Home() {
 
     return (
       <div
-        className="relative mt-4 w-[176px] rounded-lg cursor-pointer"
+        className="relative mt-4 w-[220px] mx-auto rounded-lg cursor-pointer"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => { setHovered(false); setMenuOpen(false) }}
         onClick={() => navigate(`/movie/${movie.imdbID}`)}
@@ -164,7 +173,7 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className=''>
       <Navbar />
       <div style={{
         backgroundImage: `url(${bgImage})`,
@@ -172,15 +181,20 @@ export default function Home() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
       }}>
-        <div className='py-10 flex flex-col items-center px-[200px]'>
+        <div className='py-28 pb-7 flex flex-col items-center px-[200px]'>
+          <div className="relative w-[500px]">
           <input
             type="search"
             placeholder="Search a title"
-            className="w-[300px] text-[10px] px-4 py-2 rounded-md"
+            className="w-full text-sm pl-4 pr-10 py-3 rounded-full border border-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 shadow-sm placeholder:text-gray-400"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            disabled
           />
+          <Search
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 pointer-events-none"
+            size={18}
+          />
+        </div>
           <h1 className='text-[46px] text-white font-sans font-semibold text-center'>
             Track films you've watched. <br /> Discover millions of movies. <br />
             Explore now.
@@ -200,19 +214,74 @@ export default function Home() {
         </div>
         {loading ? (
           <div className="flex justify-center items-center h-40">
-            <span className="text-white text-xl">Carregando...</span>
+            <span className="text-white text-xl"><Loading/></span>
           </div>
         ) : (
-          <div className="grid grid-cols-5 gap-6 justify-between">
+          <div className="grid grid-cols-5 gap-2 justify-between">
             {movies.map(movie => (
               <MovieCard key={movie.imdbID} movie={movie} />
             ))}
           </div>
         )}
-        <div className="flex justify-center items-center mt-8 gap-4 text-white py-14">
-          <button onClick={() => setPage(p => Math.max(p - 1, 1))} className="text-2xl">⬅️</button>
-          <span className="text-xl">Página {page} de {totalPages}</span>
-          <button onClick={() => setPage(p => Math.min(p + 1, totalPages))} className="text-2xl">➡️</button>
+        <div className="flex justify-center items-center mt-8 gap-8 text-[#00DF5E] py-14 select-none">
+          {/* Página dinâmica: mostra 5 números, com setas para navegar para frente e para trás */}
+          {page > 5 && (
+            <>
+              <button
+                onClick={() => setPage(1)}
+                className="text-xl font-semibold font-sans mr-2"
+                style={{ color: '#00DF5E' }}
+              >
+                first
+              </button>
+              <button
+                onClick={() => setPage(page - 1)}
+                className="text-xl font-semibold font-sans"
+                style={{ color: '#00DF5E' }}
+              >
+                {'<'}
+              </button>
+            </>
+          )}
+          {(() => {
+            let start = 1;
+            if (page > 3 && totalPages > 5) {
+              if (page + 2 > totalPages) {
+                start = Math.max(totalPages - 4, 1);
+              } else {
+                start = page - 2;
+              }
+            }
+            return Array.from({ length: Math.min(5, totalPages) }, (_, i) => start + i)
+              .map(num => (
+                <button
+                  key={num}
+                  onClick={() => setPage(num)}
+                  className={`text-xl font-semibold font-sans transition-colors ${page === num ? 'underline text-[28px]' : ''}`}
+                  style={{ color: '#00DF5E' }}
+                >
+                  {num}
+                </button>
+              ));
+          })()}
+          {page < totalPages && (
+            <button
+              onClick={() => setPage(page + 1)}
+              className="text-xl font-semibold font-sans"
+              style={{ color: '#00DF5E' }}
+            >
+              {'>'}
+            </button>
+          )}
+          {totalPages > 1 && (
+            <button
+              onClick={() => setPage(totalPages)}
+              className="text-xl font-semibold ml-2"
+              style={{ color: '#00DF5E' }}
+            >
+              last
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
@@ -58,42 +59,68 @@ export default function ActorDetails() {
     return idade;
   };
 
-  if (loading) return <div className="text-white text-xl text-center mt-40">Carregando...</div>;
+  if (loading) return <div className="text-white text-xl text-center mt-40"><Loading /></div>;
   if (!actor) return <div className="text-red-500 text-center mt-40">Ator não encontrado</div>;
 
   return (
     <>
       <Navbar />
-      <div className="max-w-6xl mx-auto text-white p-6">
-        <div className="flex gap-8">
+      <div className="max-w-6xl mx-auto text-white p-6 translate-y-24">
+        <div className="flex gap-4">
           <img
             src={`https://image.tmdb.org/t/p/w300${actor.profile_path}`}
             alt={actor.name}
-            className="rounded w-[300px] h-auto shadow"
+            className="rounded w-[400px] h-[533px] shadow"
           />
           <div>
-            <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
-            <p><strong>Gênero:</strong> {actor.gender === 1 ? 'Feminino' : 'Masculino'}</p>
-            <p><strong>Data de Nascimento:</strong> {actor.birthday} ({calcularIdade(actor.birthday)} anos de idade)</p>
-            <p><strong>Local de Nascimento:</strong> {actor.place_of_birth}</p>
-            <p><strong>Aparece em:</strong> {movies.length} filmes</p>
-            <p><strong>Também conhecido(a) como:</strong> {actor.also_known_as.join(', ')}</p>
-            <p className="mt-4"><strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}</p>
+              <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
+              <p className="mt-4"><strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}</p>
+            
           </div>
         </div>
 
-        <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mt-10 mb-4">Filmes em que atuou</h2>
-        <div className="grid grid-cols-5 gap-4">
-          {movies.map(movie => (
-            <div key={movie.id} className="text-center">
-              <img
-                src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
-                alt={movie.title}
-                className="w-full h-[300px] object-cover rounded"
-              />
-              <p className="text-sm mt-2">{movie.title}</p>
+        <div className='flex gap-44'>
+
+          <div className='text-[25px] font-sans font-semibold text-white mt-10 mb-4'>
+            <h1 className='pb-4'>Informações Pessoai</h1>
+
+            <div className='text-white text-[16px] flex flex-col gap-4'>
+              <p><strong>Gênero:</strong> {actor.gender === 1 ? 'Feminino' : 'Masculino'}</p>
+              <p><strong>Data de Nascimento:</strong> {actor.birthday} ({calcularIdade(actor.birthday)} anos de idade)</p>
+              <p><strong>Local de Nascimento:</strong> {actor.place_of_birth}</p>
+              <p><strong>Aparece em:</strong> {movies.length} filmes</p>
+              <p><strong>Também conhecido(a) como:</strong><br />
+                {actor.also_known_as.length > 0 ? (
+                  actor.also_known_as.map((nome, idx) => (
+                    <span key={idx}>
+                      {nome}{idx < actor.also_known_as.length - 1 && <>,<br /></>}
+                    </span>
+                  ))
+                ) : (
+                  <span>Sem outros nomes.</span>
+                )}
+              </p>
             </div>
-          ))}
+          </div>
+                
+          <div>
+
+            <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
+            <div className="grid grid-cols-4 gap-4">
+              {movies.map(movie => (
+                <div key={movie.id} className="text-center">
+                  <Link to={`/movie/${movie.id}`}>
+                    <img
+                      src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
+                      alt={movie.title}
+                      className="w-[176px] h-[300px] object-cover rounded"
+                    />
+                    <p className="text-sm mt-2">{movie.title}</p>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

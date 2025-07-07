@@ -7,6 +7,9 @@ import MovieDetails from "../pages/MovieDetails";
 import ActorDetails from "../pages/ActorDetails";
 import PopularActors from "../pages/PopularActors";
 import ProfilePage from "../pages/ProfilePage";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import { PrivateRoute } from "./PrivateRoute"; // importa o wrapper
 
 export const router = createBrowserRouter([
   {
@@ -15,30 +18,54 @@ export const router = createBrowserRouter([
   },
   {
     path: "/people",
-    element: <People />,
+    element: (
+      <PrivateRoute>
+        <People />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <PrivateRoute>
+        <Profile />
+      </PrivateRoute>
+    ),
   },
-  { 
+  {
     path: "/movie/:id",
-    element: <MovieDetails /> 
+    element: <MovieDetails />,
   },
-  { 
+  {
     path: "/details/:id",
-    element: <MovieDetails /> 
+    element: <MovieDetails />,
   },
   {
     path: "/actor/:id",
-    element: <ActorDetails />
+    element: <ActorDetails />,
   },
   {
     path: "/atores",
-    element: <PopularActors />
+    element: (
+      <PrivateRoute>
+        <PopularActors />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/perfil",
-    element: <ProfilePage />
-  }
+    element: (
+      <PrivateRoute>
+        <ProfilePage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/cadastro",
+    element: <Register />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
 ]);

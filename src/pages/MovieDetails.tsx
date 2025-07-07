@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import Loading from '../components/Loading';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
@@ -72,11 +73,11 @@ export default function MovieDetails() {
     fetchAll();
   }, [id]);
 
-  if (loading) return <div className="text-white text-xl p-10 text-center mt-48">Carregando...</div>;
+  if (loading) return <div className="text-white text-xl p-10 text-center mt-48"><Loading /></div>;
   if (!movie) return <div className="text-red-500 p-10 text-center mt-48">Filme não encontrado</div>;
 
   return (
-    <>
+    <div>
         <Navbar />
         <div
             style={{
@@ -101,8 +102,8 @@ export default function MovieDetails() {
                     zIndex: 1,
                 }}
             />
-            <div style={{ position: 'relative', zIndex: 2, height: '100%' }}>
-                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto">
+            <div style={{ position: 'relative', zIndex: 2, height: '100%', }}>
+                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto z-30 translate-y-20">
                     <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
@@ -190,6 +191,6 @@ export default function MovieDetails() {
             </div>
         </div>
         </div>
-    </>
+    </div>
   );
 }
