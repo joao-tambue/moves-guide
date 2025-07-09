@@ -3,8 +3,8 @@ interface FilterProps {
 }
 
 const genres = [
-  'Ação', 'Aventura', 'Animação', 'Comédia', 'Crime', 'Documentário',
-  'Drama', 'Família', 'Fantasia', 'História', 'Terror', 'Música',
+  'Todos', 'Ação', 'Aventura', 'Animação', 'Comédia', 'Crime', 'Documentário',
+  'Drama', 'Família', 'Fantasia', 'História', 'Terror', 'Música', 'Dorama',
   'Mistério', 'Romance', 'Ficção científica', 'Cinema TV', 'Thriller', 'Guerra', 'Faroeste'
 ];
 

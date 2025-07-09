@@ -25,42 +25,55 @@ export default function Home() {
   const activeSearchTerm = searchTerm.trim() !== '' ? searchTerm : defaultSearchTerms[Math.floor(Math.random() * defaultSearchTerms.length)];
   const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
-        useEffect(() => {
-       async function fetchMovies() {
-         setLoading(true);
-         try {
-           let url = `https://api.themoviedb.org/3/search/${mediaType || 'movie'}?api_key=${API_KEY}&query=${encodeURIComponent(activeSearchTerm)}&page=${page}&language=pt-PT`;
-           if (!searchTerm.trim()) {
-             url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
-           }
-           const res = await axios.get(url);
-           if (res.data && res.data.results) {
-             setMovies(
-               res.data.results.map((item: {
-                 id: string;
-                 title?: string;
-                 name?: string;
-                 release_date?: string;
-                 first_air_date?: string;
-                 poster_path?: string;
-               }) => ({
-               imdbID: item.id,
-                 Title: item.title || item.name || '',
-               Year: (item.release_date || item.first_air_date || '').slice(0, 4),
-                 Poster: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/176x260',
-               }))
-             );
-             setTotalPages(res.data.total_pages);
-           } else {
-             setMovies([]);
-           }
-         } catch {
-           setMovies([]);
-         }
-         setLoading(false);
-       }
-       fetchMovies();
-     }, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
+  useEffect(() => {
+    async function fetchMovies() {
+      setLoading(true);
+      try {
+        let url = '';
+        // Se um gênero estiver selecionado, buscar por gênero
+        if (selectedGenre) {
+          // Buscar o ID do gênero na API do TMDB
+          const genreRes = await axios.get(`https://api.themoviedb.org/3/genre/${mediaType || 'movie'}/list?api_key=${API_KEY}&language=pt-PT`);
+          const genreObj = genreRes.data.genres.find((g: any) => g.name.toLowerCase() === selectedGenre.toLowerCase());
+          const genreId = genreObj ? genreObj.id : null;
+          if (genreId) {
+            url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&with_genres=${genreId}&page=${page}&language=pt-PT`;
+          } else {
+            url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
+          }
+        } else if (!searchTerm.trim()) {
+          url = `https://api.themoviedb.org/3/discover/${mediaType || 'movie'}?api_key=${API_KEY}&page=${page}&language=pt-PT`;
+        } else {
+          url = `https://api.themoviedb.org/3/search/${mediaType || 'movie'}?api_key=${API_KEY}&query=${encodeURIComponent(activeSearchTerm)}&page=${page}&language=pt-PT`;
+        }
+        const res = await axios.get(url);
+        if (res.data && res.data.results) {
+          setMovies(
+            res.data.results.map((item: {
+              id: string;
+              title?: string;
+              name?: string;
+              release_date?: string;
+              first_air_date?: string;
+              poster_path?: string;
+            }) => ({
+              imdbID: item.id,
+              Title: item.title || item.name || '',
+              Year: (item.release_date || item.first_air_date || '').slice(0, 4),
+              Poster: item.poster_path ? `https://image.tmdb.org/t/p/w500${item.poster_path}` : 'https://via.placeholder.com/176x260',
+            }))
+          );
+          setTotalPages(res.data.total_pages);
+        } else {
+          setMovies([]);
+        }
+      } catch {
+        setMovies([]);
+      }
+      setLoading(false);
+    }
+    fetchMovies();
+  }, [page, selectedGenre, mediaType, activeSearchTerm, searchTerm]);
 
   return (
     <div>

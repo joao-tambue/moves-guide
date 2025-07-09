@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="./public/image.png" alt="MovieFinder Logo" />
+  <img src="./public/v2.png" alt="MovieFinder Logo" />
 </p>
 
 # The-Movie-Guide 🎬
