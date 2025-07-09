@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
 import Loading from '../components/Loading';
+import { Heart, Share2 } from 'lucide-react';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
@@ -14,6 +14,8 @@ interface MovieDetails {
   release_date: string;
   vote_average: number;
   genres: { name: string }[];
+  original_language: string;
+  vote_count: number;
 }
 
 interface CastMember {
@@ -36,6 +38,30 @@ interface RecommendedMovie {
   poster_path: string;
 }
 
+// Função utilitária para partilhar
+function shareMovie(movie: MovieDetails) {
+  if (navigator.share) {
+    navigator.share({
+      title: movie.title,
+      text: movie.overview,
+      url: window.location.href,
+    });
+  } else {
+    // fallback: copiar link
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copiado para a área de transferência!');
+  }
+}
+
+// Favoritos no localStorage
+function getFavorites(): number[] {
+  const fav = localStorage.getItem('favoriteMovies');
+  return fav ? JSON.parse(fav) : [];
+}
+function setFavorites(favs: number[]) {
+  localStorage.setItem('favoriteMovies', JSON.stringify(favs));
+}
+
 export default function MovieDetails() {
   const { id } = useParams();
   const [movie, setMovie] = useState<MovieDetails | null>(null);
@@ -43,6 +69,30 @@ export default function MovieDetails() {
   const [trailer, setTrailer] = useState<Video | null>(null);
   const [recommendations, setRecommendations] = useState<RecommendedMovie[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [isFavorite, setIsFavorite] = useState(false);
+  // Atualiza estado de favorito ao carregar filme
+  useEffect(() => {
+    if (id) {
+      const favs = getFavorites();
+      setIsFavorite(favs.includes(Number(id)));
+    }
+  }, [id]);
+
+  function handleFavorite() {
+    if (!id) return;
+    const favs = getFavorites();
+    const movieId = Number(id);
+    let updated;
+    if (favs.includes(movieId)) {
+      updated = favs.filter(f => f !== movieId);
+      setIsFavorite(false);
+    } else {
+      updated = [...favs, movieId];
+      setIsFavorite(true);
+    }
+    setFavorites(updated);
+  }
 
   useEffect(() => {
     async function fetchAll() {
@@ -78,7 +128,6 @@ export default function MovieDetails() {
 
   return (
     <div>
-        <Navbar />
         <div
             style={{
                 position: 'relative',
@@ -86,7 +135,7 @@ export default function MovieDetails() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
-                minHeight: '350px',
+                minHeight: '100vh',
                 width: '100%',
                 marginBottom: '2rem',
             }}
@@ -103,24 +152,45 @@ export default function MovieDetails() {
                 }}
             />
             <div style={{ position: 'relative', zIndex: 2, height: '100%', }}>
-                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto z-30 translate-y-20">
+                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto z-30 translate-y-5">
                     <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
-                    className="w-[300px] rounded-lg shadow-md"
+                    className="w-[350px] rounded-lg shadow-md"
                     />
                     <div>
-                        <div>
-                            <h1 className="text-4xl mb-4 font-sans font-semibold">{movie.title}</h1>
-                            <p><strong>Gênero:</strong> {movie.genres.map(g => g.name).join(', ')}</p>
-                            <p><strong>Data de Lançamento:</strong> {movie.release_date}</p>
-                            <p><strong>Nota TMDb:</strong> {movie.vote_average}</p>
-                            <p className="mt-4"><strong>Sinopse:</strong> {movie.overview}</p>
-                        </div>
-
-                        <div>
-
-                        </div>
+                      <div>
+                          <h1 className="text-4xl mb-4 font-sans font-semibold">{movie.title}</h1>
+                          <p><strong>Gênero:</strong> {movie.genres.map(g => g.name).join(', ')}</p>
+                          <p><strong>Data de Lançamento:</strong> {movie.release_date}</p>
+                          <p><strong>Nota TMDb:</strong> {movie.vote_average}</p>
+                          <p className="mt-4"><strong>Sinopse:</strong> {movie.overview}</p>
+                      </div>
+                      <div>
+                          <h2 className="text-2xl mt-6 mb-4 font-sans font-semibold">Informações</h2>
+                          <p><strong>Idioma Original:</strong> {movie.original_language.toUpperCase()}</p>
+                          <p><strong>Popularidade:</strong> {movie.vote_average}</p>
+                          <p><strong>Votos:</strong> {movie.vote_count}</p>
+                      </div>
+                      <div className='mt-6 flex items-center gap-4'>
+                        <Link to={`/watch/${id}`} className='bg-[#00DF5E] text-black px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors'>
+                          Assistir Agora
+                        </Link>
+                        <button
+                          className={`bg-gray-500 rounded-full p-6 flex items-center justify-center transition-colors ${isFavorite ? 'bg-red-600' : 'bg-gray-500'}`}
+                          onClick={handleFavorite}
+                          title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                        >
+                          <Heart className={`text-white ${isFavorite ? 'fill-red-500' : ''}`} fill={isFavorite ? '#ef4444' : 'none'} />
+                        </button>
+                        <button
+                          className='bg-gray-500 rounded-full p-6 flex items-center justify-center hover:bg-blue-600 transition-colors'
+                          onClick={() => movie && shareMovie(movie)}
+                          title='Partilhar'
+                        >
+                          <Share2 className='text-white' />
+                        </button>
+                      </div>
                     </div>
                 </div>
             </div>

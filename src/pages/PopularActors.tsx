@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar';
 import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 import Loading from '../components/Loading';
 
-// ✅ Defina a chave da API no topo
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
 interface Actor {
@@ -52,7 +51,6 @@ export default function PopularActors() {
     fetchPopularActors();
   }, [page, searching]);
 
-  // ✅ Atalho Ctrl+K
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -247,6 +245,11 @@ export default function PopularActors() {
             }}
             className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all text-sm"
           />
+          <h1
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+            >
+              Press Ctrl + K para buscar
+          </h1>
         </form>
 
         <h1 className="text-3xl font-bold text-[#00DF5E] mb-8">Pessoas populares</h1>

@@ -36,8 +36,18 @@ export default function ActorDetails() {
           axios.get(`https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${API_KEY}&language=pt-PT`),
         ]);
 
-        setActor(actorRes.data);
-        setMovies(creditsRes.data.cast.slice(0, 10)); // primeiros 10 filmes
+        const actorData = actorRes.data;
+
+        // Se a biografia estiver vazia, tenta buscar em inglês
+        if (!actorData.biography) {
+          const actorEnRes = await axios.get(`https://api.themoviedb.org/3/person/${id}?api_key=${API_KEY}&language=en-US`);
+          if (actorEnRes.data.biography) {
+            actorData.biography = actorEnRes.data.biography;
+          }
+        }
+
+        setActor(actorData);
+        setMovies(creditsRes.data.cast.slice(0, 10));
       } catch (err) {
         console.error('Erro ao buscar dados do ator:', err);
       } finally {
@@ -65,25 +75,16 @@ export default function ActorDetails() {
   return (
     <>
       <Navbar />
-      <div className="max-w-6xl mx-auto text-white p-6 translate-y-24">
+      <div className="max-w-[1180px] mx-auto text-white p-6 translate-y-24">
+        <div className='flex flex-col gap-4 justify-between'>
         <div className="flex gap-4">
           <img
             src={`https://image.tmdb.org/t/p/w300${actor.profile_path}`}
             alt={actor.name}
             className="rounded w-[400px] h-[533px] shadow"
           />
-          <div>
-              <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
-              <p className="mt-4"><strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}</p>
-            
-          </div>
-        </div>
-
-        <div className='flex gap-44'>
-
-          <div className='text-[25px] font-sans font-semibold text-white mt-10 mb-4'>
+          {/* <div className='text-[25px] font-sans font-semibold text-white mt-10 mb-4'>
             <h1 className='pb-4'>Informações Pessoai</h1>
-
             <div className='text-white text-[16px] flex flex-col gap-4'>
               <p><strong>Gênero:</strong> {actor.gender === 1 ? 'Feminino' : 'Masculino'}</p>
               <p><strong>Data de Nascimento:</strong> {actor.birthday} ({calcularIdade(actor.birthday)} anos de idade)</p>
@@ -101,24 +102,38 @@ export default function ActorDetails() {
                 )}
               </p>
             </div>
-          </div>
-                
+          </div> */}
           <div>
+              <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
+              <p className="mt-4">
+                <strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}
+              </p>
+            </div>
+        </div>
 
-            <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
-            <div className="grid grid-cols-4 gap-4">
-              {movies.map(movie => (
-                <div key={movie.id} className="text-center">
-                  <Link to={`/movie/${movie.id}`}>
-                    <img
-                      src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
-                      alt={movie.title}
-                      className="w-[176px] h-[300px] object-cover rounded"
-                    />
-                    <p className="text-sm mt-2">{movie.title}</p>
-                  </Link>
-                </div>
-              ))}
+          <div className='flex flex-col gap-4'>
+            {/* <div>
+              <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
+              <p className="mt-4">
+                <strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}
+              </p>
+            </div> */}
+            <div className=''>
+              <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
+              <div className="grid grid-cols-5 gap-2 justify-center">
+                {movies.map(movie => (
+                  <div key={movie.id} className="text-center">
+                    <Link to={`/movie/${movie.id}`} className='flex flex-col gap-2 items-center'>
+                      <img
+                        src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
+                        alt={movie.title}
+                        className="w-[215px] h-[300px] object-cover rounded"
+                      />
+                      <p className="text-sm mt-2">{movie.title}</p>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

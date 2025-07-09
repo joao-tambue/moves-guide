@@ -11,8 +11,11 @@ type User = {
   image?: string;
 };
 
+
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +47,28 @@ const Navbar = () => {
       });
   }, []);
 
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          if (currentScrollY > lastScrollY && currentScrollY > 40) {
+            setShowNavbar(false); // Scroll para baixo, esconde
+          } else {
+            setShowNavbar(true); // Scroll para cima, mostra
+          }
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+     
+  }, [lastScrollY]);
+
   function getInitials(name: string) {
     const [first, second] = name.trim().split(' ');
     if (second) return `${first[0]}${second[0]}`.toUpperCase();
@@ -59,7 +84,10 @@ const Navbar = () => {
   }
 
   return (
-    <nav className='bg-[#171717] z-20 fixed bg-opacity-95 w-full'>
+    <nav
+      className={`bg-[#171717] z-20 fixed bg-opacity-40 grayscale-0 w-full transition-transform duration-500 ease-in-out ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}
+      style={{ willChange: 'transform' }}
+    >
       <div className='flex justify-between p-4 w-[1180px] mx-auto'>
         <img src={logo} alt='logotipo' />
         <ul className='text-[#00DF5E] font-semibold flex gap-4 font-sans text-[18px] items-center'>

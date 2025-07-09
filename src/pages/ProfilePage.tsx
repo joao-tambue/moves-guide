@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import bgPerfil from '../assets/image/Rectangle 10.png'
-import { Eye, Star, FolderX, Trash } from 'lucide-react';
+import { Star, FolderX, Trash } from 'lucide-react';
 import { api } from '../services/api';
 
 interface RatedMovie {
@@ -25,9 +25,7 @@ export default function ProfilePage() {
   const [favorites, setFavorites] = useState<RatedMovie[]>([]);
   const [watched, setWatched] = useState<RatedMovie[]>([]);
   const [selectedFavorites, setSelectedFavorites] = useState<string[]>([]);
-  const [selectedWatched, setSelectedWatched] = useState<string[]>([]);
   const [selectAllFavorites, setSelectAllFavorites] = useState(false);
-  const [selectAllWatched, setSelectAllWatched] = useState(false);
   // Seleção individual e total favoritos
   const handleSelectFavorite = (id: string) => {
     setSelectedFavorites((prev) =>
@@ -51,31 +49,6 @@ export default function ProfilePage() {
     setSelectedFavorites([]);
     setSelectAllFavorites(false);
     localStorage.setItem('favorites', JSON.stringify(newFavs));
-  };
-
-  // Seleção individual e total assistidos
-  const handleSelectWatched = (id: string) => {
-    setSelectedWatched((prev) =>
-      prev.includes(id) ? prev.filter((wid) => wid !== id) : [...prev, id]
-    );
-  };
-
-  const handleSelectAllWatched = () => {
-    if (selectAllWatched) {
-      setSelectedWatched([]);
-      setSelectAllWatched(false);
-    } else {
-      setSelectedWatched(watched.map((m) => m.imdbID));
-      setSelectAllWatched(true);
-    }
-  };
-
-  const handleDeleteSelectedWatched = () => {
-    const newWatched = watched.filter((m) => !selectedWatched.includes(m.imdbID));
-    setWatched(newWatched);
-    setSelectedWatched([]);
-    setSelectAllWatched(false);
-    localStorage.setItem('watched', JSON.stringify(newWatched));
   };
 
   useEffect(() => {
@@ -187,10 +160,6 @@ export default function ProfilePage() {
 
           <div className="font-sans flex items-center gap-10">
             <div className="flex flex-col items-center">
-              <h1 className="text-[62px] font-bold font-mono text-[#00DF5E]">{watched.length}</h1>
-              <p className=''>Visto</p>
-            </div>
-            <div className="flex flex-col items-center">
               <h1 className="text-[62px] font-bold font-mono text-[#00DF5E]">{
                 (() => {
                   const year = new Date().getFullYear();
@@ -248,43 +217,6 @@ export default function ProfilePage() {
                   selectable
                   selected={selectedFavorites.includes(movie.imdbID)}
                   onSelect={() => handleSelectFavorite(movie.imdbID)}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className='mt-10'>
-          <div className="flex items-center justify-between gap-4 mb-2">
-            <div className="text-2xl font-semibold text-white flex gap-2 items-center"> <Eye /> <h1>Recently watched</h1></div>
-            <div className='flex items-center gap-2'>
-              <label className="flex items-center gap-1 cursor-pointer text-sm">
-                <input type="checkbox" checked={selectAllWatched} onChange={handleSelectAllWatched} /> Select all
-              </label>
-              <button
-                className="ml-2 px-3 py-1 text-white disabled:opacity-50"
-                onClick={handleDeleteSelectedWatched}
-                disabled={selectedWatched.length === 0}
-              >
-                <Trash className='text-red-600' />
-              </button>
-            </div>
-          </div>
-          <hr className='mb-4' />
-          {watched.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-              <FolderX size={48} className="mb-2" />
-              <span>Nenhum filme assistido encontrado.</span>
-            </div>
-          ) : (
-            <div className="grid grid-cols-6 gap-4">
-              {watched.map(movie => (
-                <MovieCard
-                  key={movie.imdbID}
-                  movie={movie}
-                  selectable
-                  selected={selectedWatched.includes(movie.imdbID)}
-                  onSelect={() => handleSelectWatched(movie.imdbID)}
                 />
               ))}
             </div>
