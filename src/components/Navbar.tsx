@@ -89,7 +89,7 @@ const Navbar = () => {
       <div className='flex justify-between p-4 w-[1180px] mx-auto'>
         <img src={logo} alt='logotipo' />
         <ul className='text-[#00DF5E] font-semibold flex gap-4 font-sans text-[18px] items-center'>
-          <li><Link to={'/'}>Movies</Link></li>
+          <li><Link to={'/home'}>Movies</Link></li>
           <li><Link to={'/atores'}>People</Link></li>
           <li><Link to={'/perfil'}>Profile</Link></li>
         </ul>
