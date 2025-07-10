@@ -1,7 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
 import Loading from '../components/Loading';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
@@ -74,8 +73,10 @@ export default function ActorDetails() {
 
   return (
     <>
-      <Navbar />
-      <div className="max-w-[1180px] mx-auto text-white p-6 translate-y-24">
+      <div className="max-w-[1180px] mx-auto text-white p-6">
+        <button className='bg-[#23272f] text-white px-4 py-2 mb-4 rounded-md shadow-md hover:bg-[#00DF5E] hover:text-black transition-colors' onClick={() => window.history.back()}>
+          Voltar
+        </button>
         <div className='flex flex-col gap-4 justify-between'>
         <div className="flex gap-4">
           <img

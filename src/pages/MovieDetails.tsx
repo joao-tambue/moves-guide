@@ -128,6 +128,7 @@ export default function MovieDetails() {
 
   return (
     <div>
+      
         <div
             style={{
                 position: 'relative',
@@ -152,7 +153,13 @@ export default function MovieDetails() {
                 }}
             />
             <div style={{ position: 'relative', zIndex: 2, height: '100%', }}>
-                <div className="flex gap-10 text-white p-10 max-w-6xl mx-auto z-30 translate-y-5">
+              <div className='flex flex-col'>
+                <button className='justify-start flex px-32 p-8 pb-0 z-30'>
+                  <Link to="/" className="text-white bg-gray-800 hover:bg-gray-700 rounded-xl px-4 py-2">
+                    Voltar
+                  </Link>
+                </button>
+                <div className="flex gap-10 text-white p-10 py-8 max-w-6xl mx-auto z-30">
                     <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
@@ -193,6 +200,7 @@ export default function MovieDetails() {
                       </div>
                     </div>
                 </div>
+              </div>
             </div>
         </div>
         <div className="text-white p-10 flex flex-col gap-10 max-w-6xl mx-auto">

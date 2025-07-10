@@ -42,7 +42,7 @@ export default function Login() {
       });
 
       // Aqui pode redirecionar para dashboard ou algo assim
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       type ErrorResponse = { response: { status: number } };
       if (

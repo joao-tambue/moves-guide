@@ -35,7 +35,7 @@ export default function Register() {
     try {
       await api.post("/api/auth/register", data);
       toast.success("Usuário registrado com sucesso haha!");
-      navigate('/login');
+      navigate('/');
     } catch (error) {
       if (error && typeof error === 'object' && 'response' in error && (error as { response?: { status?: number } }).response?.status === 400) {
         toast.error("Usuário já existe ou dados inválidos");
@@ -120,7 +120,7 @@ export default function Register() {
 
             <p className="font-thin text-center text-gray-300 mt-2">
               Already have an account?{' '}
-              <Link to={'/login'} className="font-semibold text-[#00DF5E] hover:underline">
+              <Link to={'/'} className="font-semibold text-[#00DF5E] hover:underline">
                 Log in
               </Link>
             </p>

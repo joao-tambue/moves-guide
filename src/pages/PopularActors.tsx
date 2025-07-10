@@ -141,16 +141,16 @@ export default function PopularActors() {
       {/* Modal de busca por atalho Ctrl+K */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative animate-fade-in">
+          <div className="bg-[#18181b] rounded-2xl shadow-2xl w-full max-w-lg p-7 relative animate-fade-in border border-[#23272f]">
             <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-700"
+              className="absolute top-3 right-3 text-gray-400 hover:text-[#00DF5E] transition-colors"
               onClick={() => setModalOpen(false)}
               aria-label="Fechar"
             >
               <X size={22} />
             </button>
             <form onSubmit={handleModalSearch} className="mb-4 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
               <input
                 ref={modalInputRef}
                 type="text"
@@ -163,11 +163,11 @@ export default function PopularActors() {
                     setModalNotFound(false);
                   }
                 }}
-                className="w-full pl-9 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all text-sm"
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-[#23272f] bg-[#23272f] text-white focus:outline-none focus:ring-2 focus:ring-[#00DF5E] shadow-md transition-all text-base placeholder-gray-400"
               />
             </form>
             <div className="mb-4">
-              <span className="text-gray-500 text-xs">Sugestões rápidas:</span>
+              <span className="text-gray-400 text-xs">Sugestões rápidas:</span>
               <div className="flex flex-wrap gap-2 mt-2">
                 {[
                   'Tom Hanks',
@@ -181,7 +181,7 @@ export default function PopularActors() {
                 ].map((name: string) => (
                   <button
                     key={name}
-                    className="bg-gray-100 hover:bg-[#00DF5E] hover:text-white text-gray-700 px-3 py-1 rounded-full text-xs transition"
+                    className="bg-[#23272f] border border-[#23272f] hover:bg-[#00DF5E] hover:text-black text-gray-200 px-3 py-1 rounded-full text-xs transition-all font-semibold shadow-sm"
                     onClick={() => handlePredefinedSearch(name)}
                     type="button"
                   >
@@ -201,17 +201,17 @@ export default function PopularActors() {
                   <Link
                     to={`/actor/${actor.id}`}
                     key={actor.id}
-                    className="flex items-center gap-3 bg-gray-50 rounded-lg p-2 hover:bg-[#00DF5E]/20 transition"
+                    className="flex items-center gap-3 bg-[#18181b] border border-[#23272f] rounded-xl p-2 hover:bg-[#00DF5E]/20 transition shadow group"
                     onClick={() => setModalOpen(false)}
                   >
                     <img
                       src={actor.profile_path ? `https://image.tmdb.org/t/p/w92${actor.profile_path}` : 'https://via.placeholder.com/92x138?text=Sem+foto'}
                       alt={actor.name}
-                      className="w-12 h-16 object-cover rounded"
+                      className="w-12 h-16 object-cover rounded-xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
                     />
                     <div>
-                      <div className="font-semibold text-black text-sm truncate">{actor.name}</div>
-                      <div className="text-xs text-gray-500">{actor.known_for_department}</div>
+                      <div className="font-bold text-white text-sm truncate drop-shadow-lg">{actor.name}</div>
+                      <div className="text-xs text-gray-400">{actor.known_for_department}</div>
                     </div>
                   </Link>
                 ))}
@@ -229,7 +229,7 @@ export default function PopularActors() {
           className="mb-8 w-full max-w-md mx-auto relative"
         >
           <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
             size={20}
           />
           <input
@@ -243,7 +243,7 @@ export default function PopularActors() {
                 setSearchResults([]);
               }
             }}
-            className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm transition-all text-sm"
+            className="w-full pl-10 pr-4 py-2 rounded-full border border-[#23272f] bg-[#23272f] text-white focus:outline-none focus:ring-2 focus:ring-[#00DF5E] shadow-md transition-all text-base placeholder-gray-400"
           />
           <h1
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
@@ -252,28 +252,35 @@ export default function PopularActors() {
           </h1>
         </form>
 
-        <h1 className="text-3xl font-bold text-[#00DF5E] mb-8">Pessoas populares</h1>
+        <h1 className="text-3xl font-bold text-[#00DF5E] mb-8 font-sans drop-shadow-lg">Pessoas populares</h1>
         
         {loading ? (
           <div className="flex justify-center items-center h-64"><Loading /></div>
         ) : notFound ? (
           <div className="text-center text-gray-500 text-xl py-16">Nenhum ator encontrado.</div>
         ) : (
-          <div className="grid grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
             {(searching ? searchResults : actors.slice(0, 24)).map(actor => (
-              <Link to={`/actor/${actor.id}`} key={actor.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
-                <img
-                  src={
-                    actor.profile_path
-                      ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
-                      : 'https://via.placeholder.com/300x450?text=Sem+foto'
-                  }
-                  alt={actor.name}
-                  className="w-full h-[300px] object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold text-black truncate">{actor.name}</h2>
-                  <p className="text-sm text-gray-600">{actor.known_for_department}</p>
+              <Link
+                to={`/actor/${actor.id}`}
+                key={actor.id}
+                className="relative mt-6 w-full rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group overflow-hidden"
+              >
+                <div className="relative w-full h-[300px] rounded-2xl overflow-hidden">
+                  <img
+                    src={
+                      actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
+                        : 'https://via.placeholder.com/300x450?text=Sem+foto'
+                    }
+                    alt={actor.name}
+                    className="w-full h-[300px] object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="py-4 px-2 text-white text-center">
+                  <h2 className="font-bold text-[18px] truncate mb-1 drop-shadow-lg">{actor.name}</h2>
+                  <p className="text-sm text-gray-400 mt-1 drop-shadow">{actor.known_for_department}</p>
                 </div>
               </Link>
             ))}
@@ -284,13 +291,13 @@ export default function PopularActors() {
           <div className="flex justify-center items-center mt-10 gap-4 text-white">
             <button
               onClick={() => setPage(p => Math.max(p - 1, 1))}
-              className="text-2xl disabled:opacity-50"
+              className="text-2xl disabled:opacity-50 bg-[#23272f] rounded-full p-2 hover:bg-[#00DF5E] hover:text-black transition-colors"
               disabled={page === 1}
             ><ChevronLeft /></button>
             <span className="text-xl">Page {page}</span>
             <button
               onClick={() => setPage(p => Math.min(p + 1, totalPages))}
-              className="text-2xl disabled:opacity-50"
+              className="text-2xl disabled:opacity-50 bg-[#23272f] rounded-full p-2 hover:bg-[#00DF5E] hover:text-black transition-colors"
               disabled={page === totalPages}
             ><ChevronRight /></button>
           </div>

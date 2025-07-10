@@ -14,7 +14,7 @@ import { PrivateRoute } from "./PrivateRoute"; // importa o wrapper
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Movies />,
+    element: <Login />,
   },
   {
     path: "/profile",
@@ -30,26 +30,30 @@ export const router = createBrowserRouter([
   },
   {
     path: "/details/:id",
-    element: <MovieDetails />,
+    element:(
+      <PrivateRoute>
+       <MovieDetails />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/actor/:id",
-    element: <ActorDetails />,
+    element: (
+      <PrivateRoute>
+    <ActorDetails />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/atores",
     element: (
-      <PrivateRoute>
         <PopularActors />
-      </PrivateRoute>
     ),
   },
   {
     path: "/perfil",
     element: (
-      <PrivateRoute>
         <ProfilePage />
-      </PrivateRoute>
     ),
   },
   {
@@ -57,7 +61,7 @@ export const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/login",
-    element: <Login />,
+    path: "/home",
+    element: <Movies />,
   },
 ]);
