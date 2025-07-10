@@ -16,11 +16,12 @@ export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: P
 
   return (
     <div
-      className="relative w-full min-h-screen overflow-hidden"
+      className="relative w-full overflow-hidden"
       style={{
-        background:
-          'radial-gradient(ellipse at top left, #23272f 60%, #111112 100%)',
-        minHeight: '100vh',
+        background:'radial-gradient(ellipse at top left, #23272f 60%, #111112 100%)',
+        minHeight: '80vh',
+        height: '80vh',
+        maxHeight: '80vh',
       }}
     >
       {/* Overlay para textura sutil */}
@@ -37,7 +38,7 @@ export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: P
         <h1 className="text-[50px] text-white font-poppins font-bold text-center leading-tight drop-shadow-lg">
           Explore o universo do cinema: encontre, descubra e se inspire!
         </h1>
-        <div className="relative w-[600px] item-center py-6">
+        <div className="relative w-[600px] item-center py-6 pb-0">
           <input
             ref={inputRef}
             type="search"

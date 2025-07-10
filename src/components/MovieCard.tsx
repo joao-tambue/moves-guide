@@ -109,11 +109,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
               year: 'numeric',
             })}
           </p>
-          {movie.vote_average !== undefined && (
-            <p className="text-sm text-[#00DF5E] font-semibold mt-1 drop-shadow">
-              <strong>Nota TMDb:</strong> {movie.vote_average}
-            </p>
-          )}
+          
         </div>
       </div>
     )

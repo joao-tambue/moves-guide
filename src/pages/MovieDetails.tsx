@@ -123,7 +123,7 @@ export default function MovieDetails() {
     fetchAll();
   }, [id]);
 
-  if (loading) return <div className="text-white text-xl p-10 text-center mt-48"><Loading /></div>;
+  if (loading) return <div className="text-white text-xl p-10 text-center min-h-screen"><Loading /></div>;
   if (!movie) return <div className="text-red-500 p-10 text-center mt-48">Filme não encontrado</div>;
 
   return (
@@ -177,7 +177,7 @@ export default function MovieDetails() {
                           Assistir Agora
                         </Link>
                         <button
-                          className={`bg-gray-500 rounded-full p-6 flex items-center justify-center transition-colors ${isFavorite ? 'bg-red-600' : 'bg-gray-500'}`}
+                          className={`bg-gray-500 hover:bg-red-500 rounded-full p-6 flex items-center justify-center transition-colors ${isFavorite ? 'bg-red-600' : 'bg-gray-500'}`}
                           onClick={handleFavorite}
                           title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                         >
