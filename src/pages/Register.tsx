@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
-import googleIcon from "../assets/icon/google.png";
 import logo from "../assets/logotipo.svg";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -52,63 +51,63 @@ export default function Register() {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="bg-[#131316] rounded-lg flex flex-col w-[540px] mx-auto px-[72px] py-[48px] gap-4 font-sans font-semibold text-white text-[18px] shadow-lg">
-          <div className="flex justify-center">
-            <img src={logo} alt="logotipo" />
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#181818] to-[#23272f]">
+        <div className="bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] rounded-2xl flex flex-col w-[540px] mx-auto px-[72px] py-[48px] gap-4 font-medium text-white text-[18px] shadow-2xl animate-fade-in">
+          <div className="flex justify-center mb-2">
+            <img src={logo} alt="logotipo" className="w-24 h-24 drop-shadow-lg" />
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="name">Nome</label>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="name" className="text-[#00DF5E] font-semibold tracking-wide">Nome</label>
               <input
                 type="text"
                 id="name"
                 {...register("name")}
-                className="rounded-lg py-2 px-2 flex items-center border bg-transparent transition-colors duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[14px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E]"
+                className="rounded-lg py-2 px-4 w-full border-2 border-[#23272f] bg-[#181818] text-white placeholder-white placeholder:text-[14px] placeholder:font-normal focus:border-[#00DF5E] focus:ring-2 focus:ring-[#00DF5E] transition-all duration-300 outline-none"
                 placeholder="Digite o seu nome"
               />
               {errors.name && (
-                <span className="text-red-500 text-sm">{errors.name.message}</span>
+                <span className="text-red-500 text-[14px] font-normal">{errors.name.message}</span>
               )}
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="email">Email</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="email" className="text-[#00DF5E] font-semibold tracking-wide">Email</label>
               <input
                 type="text"
                 id="email"
                 {...register("email")}
-                className="rounded-lg py-2 px-2 flex items-center border bg-transparent transition-colors duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[14px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E]"
+                className="rounded-lg py-2 px-4 w-full border-2 border-[#23272f] bg-[#181818] text-white placeholder-white placeholder:text-[14px] placeholder:font-normal focus:border-[#00DF5E] focus:ring-2 focus:ring-[#00DF5E] transition-all duration-300 outline-none"
                 placeholder="example@gmail.com"
               />
               {errors.email && (
-                <span className="text-red-500 text-sm">{errors.email.message}</span>
+                <span className="text-red-500 text-[14px] font-normal">{errors.email.message}</span>
               )}
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label htmlFor="password">Password</label>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="password" className="text-[#00DF5E] font-semibold tracking-wide">Password</label>
               <input
                 type="password"
                 id="password"
                 {...register("password")}
-                className="rounded-lg py-2 px-2 flex items-center border bg-transparent transition-colors duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[14px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E]"
+                className="rounded-lg py-2 px-4 w-full border-2 border-[#23272f] bg-[#181818] text-white placeholder-white placeholder:text-[14px] placeholder:font-normal focus:border-[#00DF5E] focus:ring-2 focus:ring-[#00DF5E] transition-all duration-300 outline-none"
                 placeholder="Digite o seu password"
               />
               {errors.password && (
-                <span className="text-red-500 text-sm">{errors.password.message}</span>
+                <span className="text-red-500 text-[14px] font-normal">{errors.password.message}</span>
               )}
             </div>
 
             <button
               type="submit"
-              className="bg-[#00DF5E] py-3 rounded-lg mt-2 hover:brightness-110 transition flex items-center justify-center"
+              className="bg-[#00DF5E] py-3 rounded-lg mt-2 hover:brightness-110 transition flex items-center justify-center shadow-lg border border-[#23272f] text-black font-bold text-lg"
               disabled={loading}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                   </svg>
@@ -119,16 +118,8 @@ export default function Register() {
               )}
             </button>
 
-            <button
-              type="button"
-              className="bg-[#707077] py-3 rounded-lg mt-2 flex items-center justify-center gap-2 hover:brightness-110 transition"
-            >
-              <img src={googleIcon} alt="" className="h-[20px] w-[20px]" />
-              Continue with Google
-            </button>
-
-            <p className="font-thin text-center">
-              Already have an account?{" "}
+            <p className="font-thin text-center text-gray-300 mt-2">
+              Already have an account?{' '}
               <Link to={'/login'} className="font-semibold text-[#00DF5E] hover:underline">
                 Log in
               </Link>

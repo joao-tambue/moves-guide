@@ -29,13 +29,11 @@ const Navbar = () => {
         },
       })
       .then((res) => {
-        // Se houver imagem salva no localStorage, usa ela
         const localImage = localStorage.getItem('profileImage');
         if (localImage) {
           setUser({ ...res.data, image: localImage });
         } else {
           setUser(res.data);
-          // Se o backend retornar imagem, salva no localStorage
           if (res.data.image) {
             localStorage.setItem('profileImage', res.data.image);
           }
@@ -54,9 +52,9 @@ const Navbar = () => {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
           if (currentScrollY > lastScrollY && currentScrollY > 40) {
-            setShowNavbar(false); // Scroll para baixo, esconde
+            setShowNavbar(false);
           } else {
-            setShowNavbar(true); // Scroll para cima, mostra
+            setShowNavbar(true);
           }
           setLastScrollY(currentScrollY);
           ticking = false;
@@ -77,7 +75,7 @@ const Navbar = () => {
 
   function handleLogout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('profileImage'); // Remove imagem ao deslogar
+    localStorage.removeItem('profileImage');
     setUser(null);
     toast.info("Logout feito com sucesso!", { position: 'top-right' });
     navigate('/login');
@@ -96,7 +94,19 @@ const Navbar = () => {
           <li><Link to={'/perfil'}>Profile</Link></li>
         </ul>
 
-        {user ? (
+        {/* Skeleton loader while user is being processed */}
+        {user === null ? (
+          <div className="flex gap-4 items-center text-white animate-pulse">
+            <div className="bg-slate-700 h-10 w-10 rounded-full border-2 border-[#00DF5E]" style={{ minWidth: 40, minHeight: 40 }} />
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-1">
+                <div className="bg-slate-700 h-4 w-24 rounded" />
+                <div className="bg-slate-700 h-3 w-32 rounded" />
+              </div>
+              <div className="bg-slate-700 h-6 w-6 rounded" />
+            </div>
+          </div>
+        ) : user ? (
           <div className='flex gap-4 items-center text-white'>
             {user.image ? (
               <img

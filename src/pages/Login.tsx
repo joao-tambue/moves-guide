@@ -68,49 +68,49 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#181818] to-[#23272f]">
       <ToastContainer />
-      <div className="bg-[#131316] rounded-lg flex flex-col w-[540px] mx-auto px-[72px] py-[48px] gap-4 font-sans font-semibold text-white text-[18px] shadow-lg">
-        <div className="flex justify-center">
-          <img src={logo} alt="logotipo" />
+      <div className="bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] rounded-2xl flex flex-col w-[380px] sm:w-[420px] md:w-[480px] mx-auto px-8 py-10 gap-4 font-sans font-semibold text-white text-[18px] shadow-2xl animate-fade-in">
+        <div className="flex justify-center mb-2">
+          <img src={logo} alt="logotipo" className="w-24 h-24 drop-shadow-lg" />
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3">
-            <label htmlFor="email">Email</label>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="email" className="text-[#00DF5E] font-bold">Email</label>
             <input
               id="email"
               type="text"
               {...register('email')}
-              className="rounded-lg py-2 px-2 flex items-center border bg-transparent transition-colors duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[14px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E]"
+              className="rounded-xl py-3 px-3 flex items-center border-2 border-[#23272f] bg-[#131316] transition-all duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[15px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E] shadow-sm"
               placeholder="example@gmail.com"
             />
             {errors.email && (
-              <span className="text-red-500 text-[14px] font-normal">{errors.email.message}</span>
+              <span className="text-red-500 text-[14px] font-normal mt-1">{errors.email.message}</span>
             )}
           </div>
-          <div className="flex flex-col gap-3">
-            <label htmlFor="password">Password</label>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="password" className="text-[#00DF5E] font-bold">Password</label>
             <input
               id="password"
               type="password"
               {...register('password')}
-              className="rounded-lg py-2 px-2 flex items-center border bg-transparent transition-colors duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[14px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E]"
+              className="rounded-xl py-3 px-3 flex items-center border-2 border-[#23272f] bg-[#131316] transition-all duration-300 focus:border-[#00DF5E] placeholder-white placeholder:text-[15px] placeholder:font-normal focus:ring-2 focus:ring-[#00DF5E] shadow-sm"
               placeholder="Digite a sua senha"
             />
             {errors.password && (
-              <span className="text-red-500 text-[14px] font-normal">{errors.password.message}</span>
+              <span className="text-red-500 text-[14px] font-normal mt-1">{errors.password.message}</span>
             )}
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#00DF5E] py-3 rounded-lg mt-2 hover:brightness-110 transition disabled:opacity-60"
+            className="bg-[#00DF5E] text-black py-3 rounded-xl mt-2 font-bold hover:bg-[#2db968d2] transition-all duration-200 shadow-lg border border-[#23272f] disabled:opacity-60"
           >
             {loading ? 'Entrando...' : 'Login now'}
           </button>
 
-          <p className="font-thin text-center">
+          <p className="font-thin text-center text-gray-300 mt-2">
             Don't have an account?{' '}
             <Link to={'/cadastro'} className="font-semibold text-[#00DF5E] hover:underline">
               Sign up

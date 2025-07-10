@@ -128,7 +128,20 @@ export default function ProfilePage() {
         <div style={{ position: 'relative', zIndex: 2, height: '100%' }}
          className="w-[1150px] mx-auto py-32 flex items-center justify-between">
 
-          {user ? (
+          {user === null ? (
+            <div className="flex gap-4 items-center text-white animate-pulse">
+              <div className="relative flex flex-col items-center">
+                <div className="h-24 w-24 rounded-full bg-gray-700 border-4 border-[#00DF5E]" />
+                <div className="mt-2 h-5 w-20 rounded bg-gray-700" />
+              </div>
+              <div className="flex gap-4">
+                <div className='flex flex-col gap-2'>
+                  <div className="h-7 w-40 rounded bg-gray-700" />
+                  <div className="h-5 w-32 rounded bg-gray-700" />
+                </div>
+              </div>
+            </div>
+          ) : (
             <div className='flex gap-4 items-center text-white'>
               <div className="relative flex flex-col items-center">
                 {user.image ? (
@@ -156,7 +169,7 @@ export default function ProfilePage() {
                   </div>
               </div>
             </div>
-          ) : null}
+          )}
 
           <div className="font-sans flex items-center gap-10">
             <div className="flex flex-col items-center">
