@@ -41,7 +41,6 @@ export default function Login() {
         autoClose: 3000,
       });
 
-      // Aqui pode redirecionar para dashboard ou algo assim
       navigate('/home');
     } catch (error) {
       type ErrorResponse = { response: { status: number } };
@@ -105,7 +104,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#00DF5E] text-black py-3 rounded-xl mt-2 font-bold hover:bg-[#2db968d2] transition-all duration-200 shadow-lg border border-[#23272f] disabled:opacity-60"
+            className="bg-[#00DF5E] text-black py-3 rounded-xl mt-2 font-thin hover:bg-[#2db968d2] transition-all duration-200 shadow-lg border border-[#23272f] disabled:opacity-60"
           >
             {loading ? 'Entrando...' : 'Login now'}
           </button>

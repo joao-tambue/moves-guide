@@ -26,6 +26,7 @@ export default function ActorDetails() {
   const [actor, setActor] = useState<Actor | null>(null);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFullBio, setShowFullBio] = useState(false);
 
   useEffect(() => {
     async function fetchActor() {
@@ -107,7 +108,28 @@ export default function ActorDetails() {
           <div>
               <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
               <p className="mt-4">
-                <strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}
+                <strong>Biografia:</strong>{" "}
+                {actor.biography
+                  ? (
+                    <>
+                      {showFullBio
+                        ? actor.biography
+                        : actor.biography.length > 400
+                          ? actor.biography.slice(0, 400) + "..."
+                          : actor.biography
+                      }
+                      {actor.biography.length > 400 && (
+                        <button
+                          className="ml-2 text-[#00DF5E] underline"
+                          onClick={() => setShowFullBio(!showFullBio)}
+                        >
+                          {showFullBio ? "Ver menos" : "Ver mais"}
+                        </button>
+                      )}
+                    </>
+                  )
+                  : "Sem biografia disponível."
+                }
               </p>
             </div>
         </div>
@@ -121,20 +143,23 @@ export default function ActorDetails() {
             </div> */}
             <div className=''>
               <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
-              <div className="grid grid-cols-5 gap-2 justify-center">
-                {movies.map(movie => (
-                  <div key={movie.id} className="text-center">
-                    <Link to={`/movie/${movie.id}`} className='flex flex-col gap-2 items-center'>
-                      <img
-                        src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
-                        alt={movie.title}
-                        className="w-[215px] h-[300px] object-cover rounded"
-                      />
-                      <p className="text-sm mt-2">{movie.title}</p>
-                    </Link>
-                  </div>
-                ))}
-              </div>
+              <div className="grid grid-cols-5 gap-6 justify-center">
+  {movies.map(movie => (
+    <div
+      key={movie.id}
+      className="bg-[#23272f] rounded-lg shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-200 p-3 flex flex-col items-center"
+    >
+      <Link to={`/movie/${movie.id}`} className="flex flex-col gap-2 items-center w-full">
+        <img
+          src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
+          alt={movie.title}
+          className="w-[180px] h-[270px] object-cover rounded-lg mb-2"
+        />
+        <p className="text-sm text-white font-semibold text-center line-clamp-2">{movie.title}</p>
+      </Link>
+    </div>
+  ))}
+</div>
             </div>
           </div>
         </div>

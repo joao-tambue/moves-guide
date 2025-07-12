@@ -204,7 +204,7 @@ export default function ProfilePage() {
             <h2 className="text-2xl font-semibold text-white flex gap-2 items-center"> <Star /> Favorit movies</h2>
             <div className='flex items-center gap-2'>
               <label className="flex items-center gap-1 cursor-pointer text-sm">
-                <input type="checkbox" checked={selectAllFavorites} onChange={handleSelectAllFavorites} /> Selct all
+                <input type="checkbox" checked={selectAllFavorites} onChange={handleSelectAllFavorites} className='' /> Selct all
               </label>
               <button
                 className="ml-2 px-3 py-1 text-white disabled:opacity-50"
