@@ -203,9 +203,16 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between gap-4 mb-2">
             <h2 className="text-2xl font-semibold text-white flex gap-2 items-center"> <Star /> Favorit movies</h2>
             <div className='flex items-center gap-2'>
-              <label className="flex items-center gap-1 cursor-pointer text-sm">
-                <input type="checkbox" checked={selectAllFavorites} onChange={handleSelectAllFavorites} className='' /> Selct all
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-white transition">
+                <input
+                  type="checkbox"
+                  checked={selectAllFavorites}
+                  onChange={handleSelectAllFavorites}
+                  className="w-5 h-5 rounded-full accent-green-500 transition-all duration-200"
+                />
+                Select all
               </label>
+
               <button
                 className="ml-2 px-3 py-1 text-white disabled:opacity-50"
                 onClick={handleDeleteSelectedFavorites}
@@ -249,17 +256,18 @@ interface MovieCardProps {
 
 function MovieCard({ movie, selectable, selected, onSelect }: MovieCardProps) {
   return (
-    <div className="relative">
+    <div className="relative mt-6 rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group">
       {selectable && (
         <input
           type="checkbox"
           checked={selected}
           onChange={onSelect}
-          className="absolute top-2 left-2 z-10 w-5 h-5 accent-green-500"
+          className="absolute top-2 left-2 z-10 w-5 h-5 rounded-full border-2 border-[#00DF5E] bg-black checked:bg-[#00DF5E] checked:border-[#00DF5E] transition-all duration-150 cursor-pointer"
         />
       )}
-      <div className="rounded-lg text-black overflow-hidden">
-        <img src={movie.Poster} alt={movie.Title} className="w-full h-[270px] object-cover" />
+
+      <div className="rounded-lg text-black overflow-hidden ">
+        <img src={movie.Poster} alt={movie.Title} className="w-full h-72 object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300" />
         <div className="p-2">
           <h3 className="text-sm font-semibold truncate text-white">{movie.Title}</h3>
           <p className="text-xs text-gray-600">{movie.Year}</p>
