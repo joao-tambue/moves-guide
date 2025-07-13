@@ -69,14 +69,21 @@ export default function ActorDetails() {
     return idade;
   };
 
-  if (loading) return <div className="text-white text-xl text-center mt-40"><Loading /></div>;
+  if (loading)
+  return (
+    <div className="flex items-center justify-center min-h-screen text-white">
+      <Loading />
+    </div>
+  );
   if (!actor) return <div className="text-red-500 text-center mt-40">Ator não encontrado</div>;
 
   return (
     <>
       <div className="max-w-[1180px] mx-auto text-white p-6">
         <button className='bg-[#23272f] text-white px-4 py-2 mb-4 rounded-md shadow-md hover:bg-[#00DF5E] hover:text-black transition-colors' onClick={() => window.history.back()}>
-          Voltar
+          <Link to={`/movie`} className="flex items-center gap-2">
+            Voltar
+          </Link>
         </button>
         <div className='flex flex-col gap-4 justify-between'>
         <div className="flex gap-4">
@@ -144,22 +151,22 @@ export default function ActorDetails() {
             <div className=''>
               <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
               <div className="grid grid-cols-5 gap-6 justify-center">
-  {movies.map(movie => (
-    <div
-      key={movie.id}
-      className="bg-[#23272f] rounded-lg shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-200 p-3 flex flex-col items-center"
-    >
-      <Link to={`/movie/${movie.id}`} className="flex flex-col gap-2 items-center w-full">
-        <img
-          src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
-          alt={movie.title}
-          className="w-[180px] h-[270px] object-cover rounded-lg mb-2"
-        />
-        <p className="text-sm text-white font-semibold text-center line-clamp-2">{movie.title}</p>
-      </Link>
-    </div>
-  ))}
-</div>
+                {movies.map(movie => (
+                  <div
+                    key={movie.id}
+                    className="relative mt-6 w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group"
+                  >
+                    <Link to={`/movie/${movie.id}`} className="flex flex-col gap-2 items-center w-full">
+                      <img
+                        src={movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : 'https://via.placeholder.com/300x450?text=Sem+imagem'}
+                        alt={movie.title}
+                        className="w-full h-72 object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
+                      />
+                      <p className="text-sm text-white font-semibold text-center line-clamp-2 pb-4">{movie.title}</p>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

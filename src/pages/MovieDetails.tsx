@@ -123,8 +123,14 @@ export default function MovieDetails() {
     fetchAll();
   }, [id]);
 
-  if (loading) return <div className="text-white text-xl p-10 text-center min-h-screen"><Loading /></div>;
-  if (!movie) return <div className="text-red-500 p-10 text-center mt-48">Filme não encontrado</div>;
+  if (loading)
+  return (
+    <div className="text-white text-xl flex items-center justify-center min-h-screen">
+      <Loading />
+    </div>
+  );
+
+  if (!movie) return <div className="text-red-500 flex items-center justify-center min-h-screen">Filme não encontrado</div>;
 
   return (
     <div>
@@ -155,7 +161,7 @@ export default function MovieDetails() {
             <div style={{ position: 'relative', zIndex: 2, height: '100%', }}>
               <div className='flex flex-col'>
                 <button className='justify-start flex px-32 p-8 pb-0 z-30'>
-                  <Link to="/" className="text-white bg-gray-800 hover:bg-gray-700 rounded-xl px-4 py-2">
+                  <Link to="/movie" className="text-white bg-gray-800 hover:bg-gray-700 rounded-xl px-4 py-2">
                     Voltar
                   </Link>
                 </button>

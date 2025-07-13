@@ -78,7 +78,7 @@ const Navbar = () => {
     localStorage.removeItem('profileImage');
     setUser(null);
     toast.info("Logout feito com sucesso!", { position: 'top-right' });
-    navigate('/login');
+    navigate('/');
   }
 
   return (

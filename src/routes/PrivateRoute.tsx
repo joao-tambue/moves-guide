@@ -18,7 +18,7 @@ export function PrivateRoute({ children }: { children: JSX.Element }) {
           <p className="mb-4 text-center text-gray-300 drop-shadow">1º Você não está logado na plataforma.<br/>Faça login para acessar esta página.</p>
           <p className="mb-4 text-center text-gray-300 drop-shadow">2º A internet esta lenta e a plataforma esta a demorar para fazer a verificação do usuario, volte na plataforma e espere a plataforma carregar completamente.</p>
           <button
-            onClick={() => navigate('/login')}
+            onClick={() => navigate('/')}
             className="bg-[#00DF5E] text-black px-6 py-2 rounded-md font-semibold hover:bg-[#2db968d2] transition mb-2 shadow-lg border border-[#23272f]"
           >
             Fazer Login

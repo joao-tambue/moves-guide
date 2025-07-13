@@ -2,8 +2,10 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
-import Loading from '../components/Loading';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import QuickSearchModal from '../components/QuickSearchModal';
 
 const API_KEY = '9b1d4b5890a9036e5a96c1660cf6c3b9';
 
@@ -23,6 +25,7 @@ export default function PopularActors() {
   const [searchResults, setSearchResults] = useState<Actor[]>([]);
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSearch, setModalSearch] = useState('');
@@ -138,90 +141,23 @@ export default function PopularActors() {
   return (
     <>
       <Navbar />
-      {/* Modal de busca por atalho Ctrl+K */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-[#18181b] rounded-2xl shadow-2xl w-full max-w-lg p-7 relative animate-fade-in border border-[#23272f]">
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-[#00DF5E] transition-colors"
-              onClick={() => setModalOpen(false)}
-              aria-label="Fechar"
-            >
-              <X size={22} />
-            </button>
-            <form onSubmit={handleModalSearch} className="mb-4 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
-              <input
-                ref={modalInputRef}
-                type="text"
-                placeholder="Buscar ator pelo nome..."
-                value={modalSearch}
-                onChange={e => {
-                  setModalSearch(e.target.value);
-                  if (!e.target.value) {
-                    setModalResults([]);
-                    setModalNotFound(false);
-                  }
-                }}
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-[#23272f] bg-[#23272f] text-white focus:outline-none focus:ring-2 focus:ring-[#00DF5E] shadow-md transition-all text-base placeholder-gray-400"
-              />
-            </form>
-            <div className="mb-4">
-              <span className="text-gray-400 text-xs">Sugestões rápidas:</span>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {[
-                  'Tom Hanks',
-                  'Scarlett Johansson',
-                  'Denzel Washington',
-                  'Meryl Streep',
-                  'Leonardo DiCaprio',
-                  'Morgan Freeman',
-                  'Jennifer Lawrence',
-                  'Brad Pitt',
-                ].map((name: string) => (
-                  <button
-                    key={name}
-                    className="bg-[#23272f] border border-[#23272f] hover:bg-[#00DF5E] hover:text-black text-gray-200 px-3 py-1 rounded-full text-xs transition-all font-semibold shadow-sm"
-                    onClick={() => handlePredefinedSearch(name)}
-                    type="button"
-                  >
-                    {name}
-                  </button>
-                ))}
-              </div>
-            </div>
-            {/* Modal resultados */}
-            {modalLoading ? (
-              <div className="flex justify-center items-center h-32"><Loading /></div>
-            ) : modalNotFound ? (
-              <div className="text-center text-gray-500 text-base py-8">Nenhum ator encontrado.</div>
-            ) : modalResults.length > 0 ? (
-              <div className="max-h-64 overflow-y-auto grid grid-cols-2 gap-4">
-                {modalResults.map(actor => (
-                  <Link
-                    to={`/actor/${actor.id}`}
-                    key={actor.id}
-                    className="flex items-center gap-3 bg-[#18181b] border border-[#23272f] rounded-xl p-2 hover:bg-[#00DF5E]/20 transition shadow group"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    <img
-                      src={actor.profile_path ? `https://image.tmdb.org/t/p/w92${actor.profile_path}` : 'https://via.placeholder.com/92x138?text=Sem+foto'}
-                      alt={actor.name}
-                      className="w-12 h-16 object-cover rounded-xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
-                    />
-                    <div>
-                      <div className="font-bold text-white text-sm truncate drop-shadow-lg">{actor.name}</div>
-                      <div className="text-xs text-gray-400">{actor.known_for_department}</div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center text-gray-400 text-sm py-8">Digite um nome para buscar um ator.</div>
-            )}
-          </div>
-        </div>
-      )}
+      <QuickSearchModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        searchValue={modalSearch}
+        onSearchValueChange={(value) => {
+          setModalSearch(value);
+          if (!value) {
+            setModalResults([]);
+            setModalNotFound(false);
+          }
+        }}
+        onSubmit={handleModalSearch}
+        onQuickSearch={handlePredefinedSearch}
+        results={modalResults}
+        loading={modalLoading}
+        notFound={modalNotFound}
+      />
 
       <div className="max-w-7xl mx-auto p-8 translate-y-28">
         <form
@@ -245,61 +181,114 @@ export default function PopularActors() {
             }}
             className="w-full pl-10 pr-4 py-2 rounded-full border border-[#23272f] bg-[#23272f] text-white focus:outline-none focus:ring-2 focus:ring-[#00DF5E] shadow-md transition-all text-base placeholder-gray-400"
           />
-          <h1
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-            >
-              Press Ctrl + K para buscar
+          <h1 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+            Press Ctrl + K
           </h1>
         </form>
 
-        <h1 className="text-3xl font-bold text-[#00DF5E] mb-8 font-sans drop-shadow-lg">Pessoas populares</h1>
-        
+        <h1 className="text-3xl font-bold text-[#00DF5E] mb-8 font-sans drop-shadow-lg">
+          Pessoas populares
+        </h1>
+
         {loading ? (
-          <div className="flex justify-center items-center h-64"><Loading /></div>
+          <div className="grid grid-cols-5 gap-6 px-2 py-4">
+            {Array.from({ length: 10 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-zinc-800 rounded-xl shadow-lg flex flex-col items-center p-4 border border-zinc-700 animate-pulse"
+              >
+                <Skeleton
+                  height={300}
+                  width={200}
+                  borderRadius={12}
+                  baseColor="#27272a"
+                  highlightColor="#3f3f46"
+                  className="mb-4"
+                />
+                <Skeleton
+                  height={28}
+                  width={160}
+                  borderRadius={8}
+                  baseColor="#27272a"
+                  highlightColor="#3f3f46"
+                  className="mb-2"
+                />
+                <Skeleton
+                  height={18}
+                  width={90}
+                  borderRadius={6}
+                  baseColor="#27272a"
+                  highlightColor="#3f3f46"
+                />
+              </div>
+            ))}
+          </div>
         ) : notFound ? (
-          <div className="text-center text-gray-500 text-xl py-16">Nenhum ator encontrado.</div>
+          <div className="text-center text-gray-500 text-xl py-16">
+            Nenhum ator encontrado.
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
-            {(searching ? searchResults : actors.slice(0, 24)).map(actor => (
-              <Link
-                to={`/actor/${actor.id}`}
-                key={actor.id}
-                className="relative mt-6 w-full rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group overflow-hidden"
-              >
-                <div className="relative w-full h-[300px] rounded-2xl overflow-hidden">
-                  <img
-                    src={
-                      actor.profile_path
-                        ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
-                        : 'https://via.placeholder.com/300x450?text=Sem+foto'
-                    }
-                    alt={actor.name}
-                    className="w-full h-[300px] object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="py-4 px-2 text-white text-center">
-                  <h2 className="font-bold text-[18px] truncate mb-1 drop-shadow-lg">{actor.name}</h2>
-                  <p className="text-sm text-gray-400 mt-1 drop-shadow">{actor.known_for_department}</p>
-                </div>
-              </Link>
-            ))}
+            {(searching ? searchResults : actors.slice(0, 24)).map((actor) => {
+              
+              return (
+                <Link
+                  to={`/actor/${actor.id}`}
+                  key={actor.id}
+                  className="relative mt-6 w-full rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group overflow-hidden"
+                >
+                  <div className="relative w-full h-[300px] rounded-2xl overflow-hidden">
+                    {!imgLoaded && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-[#23272f] animate-pulse z-10">
+                        <svg className="w-10 h-10 text-[#00DF5E] animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                        </svg>
+                      </div>
+                    )}
+                    <img
+                      src={
+                        actor.profile_path
+                          ? `https://image.tmdb.org/t/p/w300${actor.profile_path}`
+                          : 'https://via.placeholder.com/300x450?text=Sem+foto'
+                      }
+                      alt={actor.name}
+                      className="w-full h-[300px] object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300"
+                      loading="lazy"
+                      onLoad={() => setImgLoaded(true)}
+                    />
+                  </div>
+                  <div className="py-4 px-2 text-white text-center">
+                    <h2 className="font-bold text-[18px] truncate mb-1 drop-shadow-lg">
+                      {actor.name}
+                    </h2>
+                    <p className="text-sm text-gray-400 mt-1 drop-shadow">
+                      {actor.known_for_department}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
 
         {!searching && (
           <div className="flex justify-center items-center mt-10 gap-4 text-white">
             <button
-              onClick={() => setPage(p => Math.max(p - 1, 1))}
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
               className="text-2xl disabled:opacity-50 bg-[#23272f] rounded-full p-2 hover:bg-[#00DF5E] hover:text-black transition-colors"
               disabled={page === 1}
-            ><ChevronLeft /></button>
+            >
+              <ChevronLeft />
+            </button>
             <span className="text-xl">Page {page}</span>
             <button
-              onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+              onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
               className="text-2xl disabled:opacity-50 bg-[#23272f] rounded-full p-2 hover:bg-[#00DF5E] hover:text-black transition-colors"
               disabled={page === totalPages}
-            ><ChevronRight /></button>
+            >
+              <ChevronRight />
+            </button>
           </div>
         )}
       </div>
