@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logotipo.svg';
 import { api } from '../services/api';
 import { toast } from 'react-toastify';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
 
 type User = {
   name: string;
@@ -11,38 +11,33 @@ type User = {
   image?: string;
 };
 
-
 const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    api
-      .get('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const localImage = localStorage.getItem('profileImage');
-        if (localImage) {
-          setUser({ ...res.data, image: localImage });
-        } else {
-          setUser(res.data);
-          if (res.data.image) {
-            localStorage.setItem('profileImage', res.data.image);
-          }
-        }
-      })
-      .catch(() => {
-        localStorage.removeItem('token');
-        setUser(null);
-      });
+    api.get('/api/auth/me', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      const localImage = localStorage.getItem('profileImage');
+      if (localImage) {
+        setUser({ ...res.data, image: localImage });
+      } else {
+        setUser(res.data);
+        if (res.data.image) localStorage.setItem('profileImage', res.data.image);
+      }
+    })
+    .catch(() => {
+      localStorage.removeItem('token');
+      setUser(null);
+    });
   }, []);
 
   useEffect(() => {
@@ -64,13 +59,11 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-     
   }, [lastScrollY]);
 
-  function getInitials(name: string) {
+  function getInitials(name: string): string {
     const [first, second] = name.trim().split(' ');
-    if (second) return `${first[0]}${second[0]}`.toUpperCase();
-    return first[0].toUpperCase();
+    return second ? `${first[0]}${second[0]}`.toUpperCase() : first[0].toUpperCase();
   }
 
   function handleLogout() {
@@ -82,22 +75,40 @@ const Navbar = () => {
   }
 
   return (
-    <nav
-      className={`bg-[#171717] z-20 fixed bg-opacity-40 grayscale-0 w-full transition-transform duration-500 ease-in-out ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}
-      style={{ willChange: 'transform' }}
-    >
-      <div className='flex justify-between p-4 w-[1180px] mx-auto'>
-        <img src={logo} alt='logotipo' />
-        <ul className='text-[#00DF5E] font-semibold flex gap-4 font-sans text-[18px] items-center'>
+    <nav className={`fixed top-0 z-50 w-full transition-transform duration-500 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} bg-[#171717] bg-opacity-40`}>      
+      <div className="flex items-center justify-between p-4 px-6 md:px-12 max-w-screen-xl mx-auto">
+        <img src={logo} alt='logo' className="h-8 md:h-10" />
+
+        <ul className="hidden md:flex text-[#00DF5E] font-semibold gap-6 text-[16px] items-center">
           <li><Link to={'/home'}>Movies</Link></li>
           <li><Link to={'/atores'}>People</Link></li>
           <li><Link to={'/perfil'}>Profile</Link></li>
         </ul>
 
-        {/* Skeleton loader while user is being processed */}
+        {/* Mobile Menu Icon and Profile */}
+        <div className="flex items-center gap-3 md:hidden">
+          {user && (
+            user.image ? (
+              <img
+                src={user.image}
+                alt='avatar'
+                className='h-10 w-10 rounded-full object-cover border-2 border-[#00DF5E] bg-slate-700 shadow-md'
+              />
+            ) : (
+              <h1 className='bg-slate-600 h-10 w-10 flex items-center justify-center rounded-full font-bold text-[18px] text-white'>
+                {getInitials(user.name)}
+              </h1>
+            )
+          )}
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <Menu className="text-[#00DF5E]" />
+          </button>
+        </div>
+
+        {/* User Section Desktop */}
         {user === null ? (
-          <div className="flex gap-4 items-center text-white animate-pulse">
-            <div className="bg-slate-700 h-10 w-10 rounded-full border-2 border-[#00DF5E]" style={{ minWidth: 40, minHeight: 40 }} />
+          <div className="hidden md:flex gap-4 items-center text-white animate-pulse">
+            <div className="bg-slate-700 h-10 w-10 rounded-full border-2 border-[#00DF5E]" />
             <div className="flex gap-4">
               <div className="flex flex-col gap-1">
                 <div className="bg-slate-700 h-4 w-24 rounded" />
@@ -106,42 +117,61 @@ const Navbar = () => {
               <div className="bg-slate-700 h-6 w-6 rounded" />
             </div>
           </div>
-        ) : user ? (
-          <div className='flex gap-4 items-center text-white'>
+        ) : (
+          <div className='hidden md:flex items-center gap-4 text-white'>
             {user.image ? (
               <img
                 src={user.image}
                 alt='avatar'
-                className='h-10 w-10 rounded-full object-cover object-center border-2 border-[#00DF5E] bg-slate-700 shadow-md'
-                style={{ minWidth: 40, minHeight: 40 }}
+                className='h-10 w-10 rounded-full object-cover border-2 border-[#00DF5E] bg-slate-700 shadow-md'
               />
             ) : (
               <h1 className='bg-slate-600 h-10 w-10 flex items-center justify-center rounded-full font-bold text-[18px]'>
                 {getInitials(user.name)}
               </h1>
             )}
-            <div className="flex gap-4">
-                <div className='flex flex-col'>
-                    <h1 className='text-[16px]'>{user.name}</h1>
-                    <p className='text-[12px]'>{user.email}</p>
-                </div>
-              <button
-                onClick={handleLogout}
-                className='text-red-500 text-[13px] mt-1 hover:text-red-400'
-              >
-                <LogOut className='text-red-500' />
-              </button>
+            <div className="flex flex-col">
+              <h1 className='text-[16px]'>{user.name}</h1>
+              <p className='text-[12px]'>{user.email}</p>
             </div>
-          </div>
-        ) : (
-          <div className='flex items-center gap-4 text-white'>
-            <button onClick={() => navigate('/login')}>Entrar</button>
-            <button className='flex px-8 py-2 rounded-md font-sans font-semibold bg-[#00DF5E] hover:bg-[#2db968d2]'>
-              <Link to={'/login'}>Login</Link>
+            <button onClick={handleLogout} className='text-red-500 hover:text-red-400'>
+              <LogOut className='h-5 w-5' />
             </button>
           </div>
         )}
       </div>
+
+      {/* Sidebar Mobile */}
+      {isMobileMenuOpen && (
+      <div className="md:hidden fixed top-0 left-0 w-2/3 h-screen bg-black p-6 z-50 flex flex-col justify-between">
+        <div className="flex flex-col gap-6">
+          <div className="flex justify-between items-center mb-4">
+            <img src={logo} alt="logo" className="h-10" />
+            <button onClick={() => setIsMobileMenuOpen(false)}>
+              <X className="text-white w-6 h-6" />
+            </button>
+          </div>
+
+          <Link to="/home" className="text-[#00DF5E] text-lg">Movies</Link>
+          <Link to="/atores" className="text-[#00DF5E] text-lg">People</Link>
+          <Link to="/perfil" className="text-[#00DF5E] text-lg">Profile</Link>
+        </div>
+
+        {user && (
+          <div className="flex items-center gap-3 text-white mt-auto pt-6 border-t border-gray-700">
+            {user.image ? (
+              <img src={user.image} className="w-10 h-10 rounded-full" alt='user' />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-slate-600 flex items-center justify-center font-bold">
+                {getInitials(user.name)}
+              </div>
+            )}
+            <button onClick={handleLogout} className="text-red-500">Logout</button>
+          </div>
+        )}
+      </div>
+    )}
+      {/* Overlay for mobile menu */}
     </nav>
   );
 };

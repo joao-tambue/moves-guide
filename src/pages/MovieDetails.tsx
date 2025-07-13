@@ -160,16 +160,19 @@ export default function MovieDetails() {
             />
             <div style={{ position: 'relative', zIndex: 2, height: '100%', }}>
               <div className='flex flex-col'>
-                <button className='justify-start flex px-32 p-8 pb-0 z-30'>
-                  <Link to="/movie" className="text-white bg-gray-800 hover:bg-gray-700 rounded-xl px-4 py-2">
-                    Voltar
-                  </Link>
+                <button className='justify-start flex px-4 sm:px-8 lg:px-32 pt-8 pb-0 z-30'>
+                  <button className="text-white bg-gray-800 hover:bg-gray-700 rounded-xl px-4 py-2">
+                    <Link to={'/home'}>
+                      Voltar
+                    </Link>
+                    
+                  </button>
                 </button>
-                <div className="flex gap-10 text-white p-10 py-8 max-w-6xl mx-auto z-30">
+                <div className="flex flex-col lg:flex-row gap-8 text-white px-4 sm:px-6 lg:px-10 py-8 max-w-6xl mx-auto z-30">
                     <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     alt={movie.title}
-                    className="w-[350px] rounded-lg shadow-md"
+                    className="w-full sm:w-full sm:h-[500px] object-cover bg-no-repeat rounded-lg shadow-md mx-auto lg:mx-0"
                     />
                     <div>
                       <div>
@@ -185,7 +188,7 @@ export default function MovieDetails() {
                           <p><strong>Popularidade:</strong> {movie.vote_average}</p>
                           <p><strong>Votos:</strong> {movie.vote_count}</p>
                       </div>
-                      <div className='mt-6 flex items-center gap-4'>
+                      <div className='mt-6 flex flex-wrap items-center gap-4'>
                         <Link to={`/watch/${id}`} className='bg-[#00DF5E] text-black px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transition-colors'>
                           Assistir Agora
                         </Link>
@@ -209,8 +212,7 @@ export default function MovieDetails() {
               </div>
             </div>
         </div>
-        <div className="text-white p-10 flex flex-col gap-10 max-w-6xl mx-auto">
-        {/* Detalhes */}
+        <div className="text-white p-4 sm:p-4 flex flex-col gap-10 max-w-6xl mx-auto">
         <div >
             
         </div>
@@ -218,9 +220,9 @@ export default function MovieDetails() {
         {/* Elenco */}
         <div>
             <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Elenco Principal</h2>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {cast.map(actor => (
-                <Link to={`/actor/${actor.id}`} key={actor.id} className="bg-[#FFFFFF] rounded-lg p-2">
+                <Link to={`/actor/${actor.id}`} key={actor.id} className="relative mt-6 w-full  md:w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group">
                 <img
                     src={
                     actor.profile_path
@@ -228,10 +230,12 @@ export default function MovieDetails() {
                         : 'https://via.placeholder.com/185x278?text=Sem+foto'
                     }
                     alt={actor.name}
-                    className="w-full h-[278px] object-cover rounded mb-2"
+                    className="w-full h-72 object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0"
                 />
-                <p className="text-sm font-bold text-black">{actor.name}</p>
-                <p className="text-xs text-black">como {actor.character}</p>
+                <div className="p-4 text-white text-center">
+                  <p className="text-sm font-bol text-center">{actor.name}</p>
+                  <p className="text-x text-center">como: {actor.character}</p>
+                </div>
                 </Link>
             ))}
             </div>
@@ -241,7 +245,7 @@ export default function MovieDetails() {
         {trailer && (
             <div>
             <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Trailer Oficial</h2>
-            <div className="aspect-video w-full max-w-3xl mx-auto">
+            <div className="aspect-video w-full max-w-[90vw] mx-auto">
                 <iframe
                 className="rounded-lg w-full h-full"
                 src={`https://www.youtube.com/embed/${trailer.key}`}
@@ -255,9 +259,9 @@ export default function MovieDetails() {
         {/* Recomendados */}
         <div>
             <h2 className="text-[25px] font-sans font-semibold text-[#00DF5E] mb-4">Filmes Recomendados</h2>
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {recommendations.map(rec => (
-                <div key={rec.id} className="overflow-hidden">
+                <div key={rec.id} className=" relative mt-6 w-full  md:w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group">
                     <Link to={`/details/${rec.id}`}>
                     <img
                         src={
@@ -266,7 +270,7 @@ export default function MovieDetails() {
                             : 'https://via.placeholder.com/300x450?text=Sem+imagem'
                         }
                         alt={rec.title}
-                        className="w-full h-[300px] object-cover"
+                        className="w-full h-72 object-cover rounded-2xl border-2 border-[#23272f] group-hover:border-[#00DF5E] transition-all duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0"
                     />
                     <div className="p-2 text-sm font-medium text-center text-[#FFFF]">{rec.title}</div>
                     </Link>

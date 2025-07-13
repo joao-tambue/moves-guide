@@ -45,7 +45,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
     return (
       <div
-        className="relative mt-6 w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group"
+        className="relative mt-6 w-full  md:w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => { setHovered(false); setMenuOpen(false) }}
         onClick={() => navigate(`/movie/${movie.imdbID}`)}

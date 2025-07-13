@@ -104,9 +104,9 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#00DF5E] text-black py-3 rounded-xl mt-2 font-thin hover:bg-[#2db968d2] transition-all duration-200 shadow-lg border border-[#23272f] disabled:opacity-60"
+            className="bg-[#00DF5E] text-black py-3 rounded-xl mt-2 font-sans hover:bg-[#2db968d2] transition-all duration-200 shadow-lg border border-[#23272f] disabled:opacity-60"
           >
-            {loading ? 'Entrando...' : 'Login now'}
+            {loading ? 'Loading...' : 'Login now'}
           </button>
 
           <p className="font-thin text-center text-gray-300 mt-2">

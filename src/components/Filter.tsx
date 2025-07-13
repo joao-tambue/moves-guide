@@ -10,12 +10,12 @@ const genres = [
 
 export default function Filter({ onSelectGenre }: FilterProps) {
   return (
-    <div className='flex flex-col items-center gap-3 justify-center py-3 font-sans font-semibold'>
-      <div className='flex items-center gap-3 justify-center font-sans flex-wrap'>
+    <div className='hidden md:flex flex-col items-center gap-3 justify-center py-3 font-sans font-semibold w-full'>
+      <div className='grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap items-center justify-center gap-2 sm:gap-3 px-2'>
         {genres.map(genre => (
           <button
             key={genre}
-            className="flex items-center gap-2 px-4 py-2 bg-[#18181b] border border-[#26272b] rounded-lg shadow-md transition-all duration-300 ease-in-out hover:bg-[#23272f] hover:border-[#00DF5E] hover:shadow-lg hover:scale-105 text-white font-medium text-base"
+            className="px-3 py-2 bg-[#18181b] border border-[#26272b] rounded-md shadow-sm transition-all duration-300 ease-in-out hover:bg-[#23272f] hover:border-[#00DF5E] hover:shadow-lg text-white text-sm sm:text-base whitespace-nowrap"
             onClick={() => onSelectGenre(genre)}
           >
             {genre}

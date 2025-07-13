@@ -159,11 +159,12 @@ export default function PopularActors() {
         notFound={modalNotFound}
       />
 
-      <div className="max-w-7xl mx-auto p-8 translate-y-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 translate-y-28">
         <form
           onSubmit={handleSearch}
-          className="mb-8 w-full max-w-md mx-auto relative"
+          className="mb-6 sm:mb-8 w-full max-w-md mx-auto relative"
         >
+
           <Search
             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none"
             size={20}
@@ -191,7 +192,7 @@ export default function PopularActors() {
         </h1>
 
         {loading ? (
-          <div className="grid grid-cols-5 gap-6 px-2 py-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-2 py-4">
             {Array.from({ length: 10 }).map((_, idx) => (
               <div
                 key={idx}

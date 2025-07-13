@@ -17,9 +17,8 @@ interface Props {
 
 export default function MovieList({ movies, loading }: Props) {
   if (loading) {
-    // Exibe skeletons enquanto carrega
     return (
-      <div className="grid grid-cols-5 gap-6 px-2 py-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-4 py-6">
         {Array.from({ length: 10 }).map((_, idx) => (
           <div
             key={idx}
@@ -55,10 +54,11 @@ export default function MovieList({ movies, loading }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-5 gap-2 justify-between">
-      {movies.map(movie => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-0">
+      {movies.map((movie) => (
         <MovieCard key={movie.imdbID} movie={movie} />
       ))}
     </div>
   );
 }
+

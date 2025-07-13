@@ -59,13 +59,13 @@ export default function Register() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-[#00DF5E] font-semibold tracking-wide">Nome</label>
+              <label htmlFor="name" className="text-[#00DF5E] font-semibold tracking-wide">Name</label>
               <input
                 type="text"
                 id="name"
                 {...register("name")}
                 className="rounded-lg py-2 px-4 w-full border-2 border-[#23272f] bg-[#181818] text-white placeholder-white placeholder:text-[14px] placeholder:font-normal focus:border-[#00DF5E] focus:ring-2 focus:ring-[#00DF5E] transition-all duration-300 outline-none"
-                placeholder="Digite o seu nome"
+                placeholder="Enter your name"
               />
               {errors.name && (
                 <span className="text-red-500 text-[14px] font-normal">{errors.name.message}</span>
@@ -93,7 +93,7 @@ export default function Register() {
                 id="password"
                 {...register("password")}
                 className="rounded-lg py-2 px-4 w-full border-2 border-[#23272f] bg-[#181818] text-white placeholder-white placeholder:text-[14px] placeholder:font-normal focus:border-[#00DF5E] focus:ring-2 focus:ring-[#00DF5E] transition-all duration-300 outline-none"
-                placeholder="Digite o seu password"
+                placeholder="Enter your password"
               />
               {errors.password && (
                 <span className="text-red-500 text-[14px] font-normal">{errors.password.message}</span>
@@ -107,11 +107,7 @@ export default function Register() {
             >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                  </svg>
-                  Registrando...
+                  Loading...
                 </span>
               ) : (
                 'Create account'

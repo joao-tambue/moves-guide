@@ -111,7 +111,7 @@ export default function ProfilePage() {
         backgroundImage: `url(${bgPerfil})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',    
+        backgroundRepeat: 'no-repeat',
       }}>
         <div
           style={{
@@ -125,8 +125,11 @@ export default function ProfilePage() {
           }}
         />
 
-        <div style={{ position: 'relative', zIndex: 2, height: '100%' }}
-         className="w-[1150px] mx-auto py-32 flex items-center justify-between">
+        <div
+          style={{ position: 'relative', zIndex: 2, height: '100%' }}
+          className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left"
+        >
+
 
           {user === null ? (
             <div className="flex gap-4 items-center text-white animate-pulse">
@@ -142,7 +145,7 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <div className='flex gap-4 items-center text-white'>
+            <div className='flex flex-col sm:flex-row gap-6 items-center text-white'>
               <div className="relative flex flex-col items-center">
                 {user.image ? (
                   <img src={user.image} alt='avatar' className='h-24 w-24 rounded-full object-cover border-4 border-[#00DF5E]' />
@@ -171,7 +174,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <div className="font-sans flex items-center gap-10">
+          <div className="font-sans flex sm:flex-row items-center justify-center gap-6 sm:gap-10 mt-6 sm:mt-0">
             <div className="flex flex-col items-center">
               <h1 className="text-[62px] font-bold font-mono text-[#00DF5E]">{
                 (() => {
@@ -200,9 +203,9 @@ export default function ProfilePage() {
       <div className="max-w-6xl mx-auto py-10">
 
         <section className="mb-10">
-          <div className="flex items-center justify-between gap-4 mb-2">
-            <h2 className="text-2xl font-semibold text-white flex gap-2 items-center"> <Star /> Favorit movies</h2>
-            <div className='flex items-center gap-2'>
+          <div className="px-4 flex items-center justify-between gap-4 mb-2">
+            <h2 className="text-2xl font-semibold text-white flex gap-2 items-center"> <Star /> <span className='hidden sm:block'>Favorit movies</span></h2>
+            <div className='flex flex-wrap items-center text-sm'>
               <label className="flex items-center gap-2 cursor-pointer text-sm text-white transition">
                 <input
                   type="checkbox"
@@ -229,7 +232,7 @@ export default function ProfilePage() {
               <span>Nenhum filme favorito encontrado.</span>
             </div>
           ) : (
-            <div className="grid grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 px-4">
               {favorites.map(movie => (
                 <MovieCard
                   key={movie.imdbID}
@@ -256,7 +259,7 @@ interface MovieCardProps {
 
 function MovieCard({ movie, selectable, selected, onSelect }: MovieCardProps) {
   return (
-    <div className="relative mt-6 rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group">
+    <div className="relative mt-6 rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group min-w-0">
       {selectable && (
         <input
           type="checkbox"

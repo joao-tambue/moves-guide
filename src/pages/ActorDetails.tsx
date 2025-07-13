@@ -58,16 +58,6 @@ export default function ActorDetails() {
     fetchActor();
   }, [id]);
 
-  const calcularIdade = (dataNascimento: string): number => {
-    const nascimento = new Date(dataNascimento);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const m = hoje.getMonth() - nascimento.getMonth();
-    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--;
-    }
-    return idade;
-  };
 
   if (loading)
   return (
@@ -79,40 +69,20 @@ export default function ActorDetails() {
 
   return (
     <>
-      <div className="max-w-[1180px] mx-auto text-white p-6">
+      <div className="max-w-[1180px] mx-auto text-white px-4 sm:px-6 lg:px-8 py-6">
         <button className='bg-[#23272f] text-white px-4 py-2 mb-4 rounded-md shadow-md hover:bg-[#00DF5E] hover:text-black transition-colors' onClick={() => window.history.back()}>
-          <Link to={`/movie`} className="flex items-center gap-2">
+          <Link to={'/atores'} className="flex items-center gap-2">
             Voltar
           </Link>
         </button>
         <div className='flex flex-col gap-4 justify-between'>
-        <div className="flex gap-4">
+        <div className="flex flex-col lg:flex-row gap-6 items-center lg:items-start">
           <img
             src={`https://image.tmdb.org/t/p/w300${actor.profile_path}`}
             alt={actor.name}
-            className="rounded w-[400px] h-[533px] shadow"
+            className="rounded w-full md:max-w-[300px] h-auto shadow"
           />
-          {/* <div className='text-[25px] font-sans font-semibold text-white mt-10 mb-4'>
-            <h1 className='pb-4'>Informações Pessoai</h1>
-            <div className='text-white text-[16px] flex flex-col gap-4'>
-              <p><strong>Gênero:</strong> {actor.gender === 1 ? 'Feminino' : 'Masculino'}</p>
-              <p><strong>Data de Nascimento:</strong> {actor.birthday} ({calcularIdade(actor.birthday)} anos de idade)</p>
-              <p><strong>Local de Nascimento:</strong> {actor.place_of_birth}</p>
-              <p><strong>Aparece em:</strong> {movies.length} filmes</p>
-              <p><strong>Também conhecido(a) como:</strong><br />
-                {actor.also_known_as.length > 0 ? (
-                  actor.also_known_as.map((nome, idx) => (
-                    <span key={idx}>
-                      {nome}{idx < actor.also_known_as.length - 1 && <>,<br /></>}
-                    </span>
-                  ))
-                ) : (
-                  <span>Sem outros nomes.</span>
-                )}
-              </p>
-            </div>
-          </div> */}
-          <div>
+          <div className="w-full lg:w-2/3">
               <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
               <p className="mt-4">
                 <strong>Biografia:</strong>{" "}
@@ -142,19 +112,13 @@ export default function ActorDetails() {
         </div>
 
           <div className='flex flex-col gap-4'>
-            {/* <div>
-              <h1 className="text-4xl font-bold mb-4">{actor.name}</h1>
-              <p className="mt-4">
-                <strong>Biografia:</strong> {actor.biography || 'Sem biografia disponível.'}
-              </p>
-            </div> */}
             <div className=''>
               <h2 className="text-[25px] font-sans font-semibold text-white mt-10 mb-4">Filmografia</h2>
-              <div className="grid grid-cols-5 gap-6 justify-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 justify-center">
                 {movies.map(movie => (
                   <div
                     key={movie.id}
-                    className="relative mt-6 w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group"
+                    className="relative mt-6 w-full  md:w-[220px] mx-auto rounded-2xl cursor-pointer shadow-lg bg-gradient-to-br from-[#181818] to-[#23272f] border border-[#23272f] hover:scale-105 transition-transform duration-300 group"
                   >
                     <Link to={`/movie/${movie.id}`} className="flex flex-col gap-2 items-center w-full">
                       <img

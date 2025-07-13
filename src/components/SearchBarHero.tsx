@@ -1,30 +1,28 @@
-
 import { Search } from 'lucide-react';
+import iconeMovie from '../assets/icon/image.png';
 import Filter from './Filter';
 import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 
 interface Props {
   searchTerm: string;
   onSearch: (term: string) => void;
   onSelectGenre: (genre: string) => void;
 }
+
 export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: Props) {
-  // sugestões removidas
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div
       className="relative w-full overflow-hidden"
       style={{
-        background:'radial-gradient(ellipse at top left, #23272f 60%, #111112 100%)',
+        background: 'radial-gradient(ellipse at top left, #23272f 60%, #111112 100%)',
         minHeight: '80vh',
         height: '80vh',
         maxHeight: '80vh',
       }}
     >
-      {/* Overlay para textura sutil */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
@@ -33,12 +31,20 @@ export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: P
           opacity: 0.7,
         }}
       />
-      {/* Conteúdo principal */}
-      <div className='relative min-h-screen justify-center pb-7 flex flex-col items-center px-[200px] z-10'>
-        <h1 className="text-[50px] text-white font-poppins font-bold text-center leading-tight drop-shadow-lg">
-          Explore o universo do cinema: encontre, descubra e se inspire!
-        </h1>
-        <div className="relative w-[600px] item-center py-6 pb-0">
+
+      <div className='relative py-28 md:-mt-36 lg:-mt-[70px] pb-0 sm:min-h-screen justify-center sm:pb-7 flex flex-col items-center px-4 sm:px-10 md:px-20 lg:px-40 xl:px-[200px] z-10 text-center'>
+        <div className="text-[28px] sm:text-[32px] md:text-[36px] lg:text-[44px] xl:text-[50px] text-white font-poppins font-bold leading-tight drop-shadow-lg">
+          <div className="block md:hidden">
+            <div className="flex items-center justify-center mb-3">
+              <img src={iconeMovie} alt="icon" className="h-20 w-20" />
+            </div>
+
+            <p>Descubra filmes incríveis</p>
+          </div>
+          <span className="hidden md:block">Explore o universo do cinema: encontre, descubra e se inspire!</span>
+        </div>
+
+        <div className="relative w-full max-w-[600px] py-6 pb-0">
           <input
             ref={inputRef}
             type="search"
@@ -48,24 +54,23 @@ export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: P
             onChange={e => onSearch(e.target.value)}
             autoComplete="off"
           />
-          <Search className="absolute right-3 top-1/2 transform -translate-y-4 text-green-600 pointer-events-none" size={18} />
+          <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 pointer-events-none" size={18} />
         </div>
-        
-        {/* Filter só aparece se não estiver mostrando sugestões */}
-        <AnimatePresence>
-          
-            <motion.div
-              key="filter"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.25 }}
-            >
 
-              <p className='text-center text-white'>FILTER BY:</p>
-              <Filter onSelectGenre={onSelectGenre} />
-              
-            </motion.div>
+        {/* Filter */}
+        <AnimatePresence>
+          <motion.div
+            key="filter"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className='hidden sm:block'>
+              <p className='text-white text-sm sm:text-base'>FILTER BY:</p>
+            </div>
+            <Filter onSelectGenre={onSelectGenre} />
+          </motion.div>
         </AnimatePresence>
       </div>
     </div>
