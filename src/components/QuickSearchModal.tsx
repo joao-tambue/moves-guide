@@ -1,4 +1,3 @@
-// components/QuickSearchModal.tsx
 import { useRef, useEffect } from 'react';
 import { X, Search } from 'lucide-react';
 import Loading from './Loading';

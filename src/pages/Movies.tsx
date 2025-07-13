@@ -36,9 +36,7 @@ export default function Home() {
       setLoading(true);
       try {
         let url = '';
-        // Se um gênero estiver selecionado, buscar por gênero
         if (selectedGenre) {
-          // Buscar o ID do gênero na API do TMDB
           const genreRes = await axios.get(`https://api.themoviedb.org/3/genre/${mediaType || 'movie'}/list?api_key=${API_KEY}&language=pt-PT`);
 const genreObj = genreRes.data.genres.find((g: Genre) => g.name.toLowerCase() === selectedGenre.toLowerCase());
           const genreId = genreObj ? genreObj.id : null;
@@ -99,7 +97,6 @@ const genreObj = genreRes.data.genres.find((g: Genre) => g.name.toLowerCase() ==
           </div>
         </div>
 
-        {/* Mensagem estilizada e animada para filme não encontrado */}
         <AnimatePresence>
           {!loading && movies.length === 0 ? (
             <motion.div
@@ -144,7 +141,6 @@ const genreObj = genreRes.data.genres.find((g: Genre) => g.name.toLowerCase() ==
           )}
         </AnimatePresence>
 
-        {/* Paginação */}
         <motion.div
           className="flex flex-wrap justify-center items-center mt-8 gap-2 sm:gap-4 text-[#00DF5E] py-6 sm:py-8 select-none"
           initial={{ opacity: 0, y: 20 }}

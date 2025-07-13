@@ -57,7 +57,6 @@ export default function SearchBarHero({ searchTerm, onSearch, onSelectGenre }: P
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-600 pointer-events-none" size={18} />
         </div>
 
-        {/* Filter */}
         <AnimatePresence>
           <motion.div
             key="filter"

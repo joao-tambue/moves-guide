@@ -9,7 +9,6 @@ import logo from "../assets/logotipo.svg";
 import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
-// Esquema de validação com Zod
 const registerSchema = z.object({
   name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
   email: z.string().email("Email inválido"),

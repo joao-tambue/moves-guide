@@ -85,7 +85,6 @@ const Navbar = () => {
           <li><Link to={'/perfil'}>Profile</Link></li>
         </ul>
 
-        {/* Mobile Menu Icon and Profile */}
         <div className="flex items-center gap-3 md:hidden">
           {user && (
             user.image ? (
@@ -105,7 +104,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* User Section Desktop */}
         {user === null ? (
           <div className="hidden md:flex gap-4 items-center text-white animate-pulse">
             <div className="bg-slate-700 h-10 w-10 rounded-full border-2 border-[#00DF5E]" />
@@ -141,7 +139,6 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Sidebar Mobile */}
       {isMobileMenuOpen && (
       <div className="md:hidden fixed top-0 left-0 w-2/3 h-screen bg-black p-6 z-50 flex flex-col justify-between">
         <div className="flex flex-col gap-6">
@@ -171,7 +168,6 @@ const Navbar = () => {
         )}
       </div>
     )}
-      {/* Overlay for mobile menu */}
     </nav>
   );
 };
