@@ -3,7 +3,7 @@ import { useState } from "react";
 import AccessDeniedIcon from '../assets/icon/access-denied.svg';
 import { useNavigate } from "react-router-dom";
 
-export function PrivateRoute({ children }: { children: JSX.Element }) {
+export function PrivateRoute({ children }: { children: React.ReactElement }) {
   const token = localStorage.getItem("token");
   const [showModal] = useState(!token);
   const navigate = useNavigate();
