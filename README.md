@@ -4,7 +4,7 @@
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="#" target="_blank">
-    <img alt="License: joao tambue" src="https://img.shields.io/badge/License-joao tambue-yellow.svg" />
+    <img alt="License: joao tambue" src="https://img.shields.io/badge/License- MIT-yellow.svg" />
   </a>
 </p>
 
